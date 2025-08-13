@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-4xl mx-auto p-6">
+  <div class="w-full p-6" v-if="show">
     <h1 class="text-2xl font-bold mb-6">Registrar Eventos del Partido</h1>
 
     <!-- Formulario -->
@@ -69,7 +69,10 @@
               (Entra: {{ e.jugadorEntra }})
             </span>
           </span>
-          <button @click="eliminarEvento(i)" class="text-red-600 hover:underline">
+          <button
+            @click="eliminarEvento(i)"
+            class="text-red-600 hover:underline"
+          >
             Eliminar
           </button>
         </li>
@@ -95,7 +98,9 @@
             <td class="border p-2 text-center">{{ jugador.goles }}</td>
             <td class="border p-2 text-center">{{ jugador.amarillas }}</td>
             <td class="border p-2 text-center">
-              <span v-if="jugador.expulsado" class="text-red-600 font-bold">Sí</span>
+              <span v-if="jugador.expulsado" class="text-red-600 font-bold"
+                >Sí</span
+              >
               <span v-else>No</span>
             </td>
             <td class="border p-2">
@@ -116,15 +121,18 @@
       </button>
     </div>
   </div>
+  <!-- <ArbitroPanelMobile v-else/> -->
+  <MatchDetails v-else />
 </template>
 <script setup>
 import { reactive, ref, computed } from "vue";
-
+import MatchDetails from "./ui/MatchDetails.vue";
+const show = ref(false);
 const nuevoEvento = reactive({
   tipo: "",
   jugador: "",
   minuto: null,
-  jugadorEntra: ""
+  jugadorEntra: "",
 });
 
 const eventos = ref([]); // Todos los eventos cargados
@@ -137,7 +145,7 @@ const jugadoresResumen = computed(() => {
   const jugadores = [];
 
   for (const e of eventosOrdenados.value) {
-    let jugador = jugadores.find(j => j.nombre === e.jugador);
+    let jugador = jugadores.find((j) => j.nombre === e.jugador);
 
     if (!jugador) {
       jugador = {
@@ -147,7 +155,7 @@ const jugadoresResumen = computed(() => {
         expulsado: false,
         expulsiones: 0,
         sustitucion: null,
-        sustituciones: 0
+        sustituciones: 0,
       };
       jugadores.push(jugador);
     }
@@ -195,20 +203,25 @@ function agregarEvento() {
   }
 
   // ✅ Validación previa
-  const eventosPrevios = eventos.value
-    .filter(e => e.jugador === nuevoEvento.jugador && e.minuto < nuevoEvento.minuto);
-
-  const fueExpulsado = eventosPrevios.some(e =>
-    e.tipo === "expulsion" ||
-    (e.tipo === "amonestacion" && contarAmarillasHasta(e.minuto, nuevoEvento.jugador) >= 2)
+  const eventosPrevios = eventos.value.filter(
+    (e) => e.jugador === nuevoEvento.jugador && e.minuto < nuevoEvento.minuto
   );
 
-  const fueSustituido = eventosPrevios.some(e => e.tipo === "sustitucion");
+  const fueExpulsado = eventosPrevios.some(
+    (e) =>
+      e.tipo === "expulsion" ||
+      (e.tipo === "amonestacion" &&
+        contarAmarillasHasta(e.minuto, nuevoEvento.jugador) >= 2)
+  );
+
+  const fueSustituido = eventosPrevios.some((e) => e.tipo === "sustitucion");
 
   if (fueExpulsado || fueSustituido) {
-    alert(`⚠ El jugador ${nuevoEvento.jugador} ya fue ${
-      fueExpulsado ? "expulsado" : "sustituido"
-    } antes del minuto ${nuevoEvento.minuto} y no puede recibir más eventos.`);
+    alert(
+      `⚠ El jugador ${nuevoEvento.jugador} ya fue ${
+        fueExpulsado ? "expulsado" : "sustituido"
+      } antes del minuto ${nuevoEvento.minuto} y no puede recibir más eventos.`
+    );
     limpiarFormulario();
     return;
   }
@@ -219,7 +232,8 @@ function agregarEvento() {
 
 function contarAmarillasHasta(minuto, jugador) {
   return eventos.value.filter(
-    e => e.jugador === jugador && e.tipo === "amonestacion" && e.minuto <= minuto
+    (e) =>
+      e.jugador === jugador && e.tipo === "amonestacion" && e.minuto <= minuto
   ).length;
 }
 
@@ -237,7 +251,7 @@ function eliminarEvento(index) {
 function guardarEventos() {
   console.log("Datos a enviar:", {
     eventos: eventosOrdenados.value,
-    resumen: jugadoresResumen.value
+    resumen: jugadoresResumen.value,
   });
   // Aquí harías la llamada a tu API con fetch/axios
 }
