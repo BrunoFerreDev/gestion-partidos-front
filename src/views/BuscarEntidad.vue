@@ -73,6 +73,8 @@ export default {
           return "Club";
         case "arbitro":
           return "Árbitro";
+        case "torneo":
+          return "Torneo";
         default:
           return "Entidad";
       }

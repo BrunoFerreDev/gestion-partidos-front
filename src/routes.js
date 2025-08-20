@@ -7,8 +7,13 @@ import RegistroClub from "./components/RegistroClub.vue";
 import RegistroArbitro from "./components/RegistroArbitro.vue";
 import BuscarEntidad from "./views/BuscarEntidad.vue";
 const routes = [
-  { path: "/", redirect: "/jugadores" }, // redirigir por defecto
-  { path: "/jugadores", component: RegistroJugador },
+  {
+    path: "/torneos/nuevo",
+    name: "registrar-torneo",
+    component: () => import("./views/RegistrarTorneoView.vue"),
+  },
+  { path: "/", component: () => import("./views/PosicionesView.vue") }, // redirigir por defecto
+  { path: "/jugadores", name: "registrar-jugador", component: RegistroJugador },
   { path: "/entrenadores", component: RegistroEntrenador },
   { path: "/clubes", component: RegistroClub },
   { path: "/arbitros", component: RegistroArbitro },
@@ -29,6 +34,12 @@ const routes = [
     component: BuscarEntidad,
     name: "buscar-clubes",
     props: { tipo: "club" },
+  },
+  {
+    path: "/buscar/torneos",
+    name: "buscar-torneos",
+    component: BuscarEntidad,
+    props: { tipo: "torneo" },
   },
   {
     path: "/buscar/arbitros",

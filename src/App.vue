@@ -1,11 +1,10 @@
 <script setup>
-import Menu from "./components/Menu.vue";
-import RegistroJugador from "./components/RegistroJugador.vue";
+import SidebarMenu from "./components/SidebarMenu.vue";
 </script>
 
 <template>
   <header
-    class="flex items-center justify-between p-4 rounded border border-gray-400 shadow-md"
+    class="flex items-center justify-between p-4 rounded border border-gray-400 shadow-sm"
   >
     <div class="flex gap-5 h-full w-1/2">
       <img
@@ -31,7 +30,7 @@ import RegistroJugador from "./components/RegistroJugador.vue";
     </div>
   </header>
   <main class="flex gap-5 mt-4 shadow-md h-[80vh]">
-    <Menu />
+    <SidebarMenu />
     <div class="w-full border border-gray-400 rounded">
       <router-view></router-view>
     </div>

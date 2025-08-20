@@ -1,11 +1,41 @@
 <template>
   <div
-    class="w-68 bg-gray-100 shadow-md border border-gray-400 rounded flex flex-col justify-start gap-1"
+    class="w-68 bg-gray-100 shadow-md border border-gray-400 rounded flex flex-col justify-start gap-1 overflow-y-auto"
   >
+    <RouterLink
+      to="/"
+      class="w-full flex justify-between items-center px-4 py-2 bg-blue-400 font-semibold"
+    >
+      Inicio
+    </RouterLink>
+    <!-- Torneos -->
+    <div>
+      <button
+        class="w-full flex justify-between items-center px-4 py-2 bg-gray-300 font-semibold"
+        @click="toggle('torneos')"
+      >
+        Torneos
+        <span>{{ open.torneos ? "−" : "+" }}</span>
+      </button>
+      <div v-if="open.torneos" class="bg-white">
+        <ul class="pl-6 py-2 space-y-1 text-gray-700 flex flex-col">
+          <RouterLink
+            :to="{ name: 'buscar-torneos' }"
+            class="hover:text-blue-600 cursor-pointer"
+            >Buscar torneos</RouterLink
+          >
+          <RouterLink
+            :to="{ name: 'registrar-torneo' }"
+            class="hover:text-blue-600 cursor-pointer"
+            >Nuevo registro</RouterLink
+          >
+        </ul>
+      </div>
+    </div>
     <!-- Jugadores -->
     <div>
       <button
-        class="w-full flex justify-between items-center px-4 py-2 bg-blue-500 text-white font-semibold"
+        class="w-full flex justify-between items-center px-4 py-2 bg-gray-300 font-semibold"
         @click="toggle('jugadores')"
       >
         Jugadores
@@ -18,20 +48,10 @@
             class="hover:text-blue-600 cursor-pointer"
             >Buscar jugadores</RouterLink
           >
-          <RouterLink to="/" class="hover:text-blue-600 cursor-pointer"
-            >Primer registro</RouterLink
-          >
-          <RouterLink to="/" class="hover:text-blue-600 cursor-pointer"
-            >Transferencias</RouterLink
-          >
-          <RouterLink to="/" class="hover:text-blue-600 cursor-pointer"
-            >Confirmar registro</RouterLink
-          >
-          <RouterLink to="/" class="hover:text-blue-600 cursor-pointer"
-            >Confirmar contrato</RouterLink
-          >
-          <RouterLink to="/" class="hover:text-blue-600 cursor-pointer"
-            >Imprimir tarjetas</RouterLink
+          <RouterLink
+            :to="{ name: 'registrar-jugador' }"
+            class="hover:text-blue-600 cursor-pointer"
+            >Nuevo registro</RouterLink
           >
         </ul>
       </div>
@@ -59,7 +79,6 @@
           >
             Registrar entrenador</RouterLink
           >
-          <li class="hover:text-blue-600 cursor-pointer">Confirmar contrato</li>
         </ul>
       </div>
     </div>
@@ -105,7 +124,7 @@
           <RouterLink to="/arbitros" class="hover:text-blue-600 cursor-pointer"
             >Registrar árbitro</RouterLink
           >
-          <li class="hover:text-blue-600 cursor-pointer">Asignaciones</li>
+          <li class="hover:text-blue-600 cursor-pointer">Designar</li>
         </ul>
       </div>
     </div>
@@ -144,7 +163,8 @@ export default {
   data() {
     return {
       open: {
-        jugadores: true,
+        torneos: true,
+        jugadores: false,
         entrenadores: false,
         clubes: false,
         arbitros: false,
