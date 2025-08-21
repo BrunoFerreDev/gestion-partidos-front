@@ -29,7 +29,7 @@ import SidebarMenu from "./components/SidebarMenu.vue";
       />
     </div>
   </header>
-  <main class="flex gap-5 mt-4 shadow-md h-[80vh]">
+  <main class="flex gap-5 mt-4 h-[80vh]">
     <SidebarMenu />
     <div class="w-full border border-gray-400 rounded">
       <router-view></router-view>

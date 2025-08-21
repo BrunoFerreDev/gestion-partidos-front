@@ -1,7 +1,9 @@
 <template>
   <div class="p-6 w-full overflow-y-auto">
-    <h2 class="text-2xl font-semibold mb-6">Tabla de Posiciones</h2>
-
+    <div class="flex justify-center items-center gap-4">
+      <h2 class="text-2xl font-semibold">Tabla de Posiciones</h2>
+      <strong class="text-2xl font-semibold">Torneo </strong>
+    </div>
     <!-- Zona A -->
     <h3 class="text-xl font-bold mb-3 text-blue-700">Zona A</h3>
     <div class="overflow-x-auto mb-10">

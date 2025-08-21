@@ -1,119 +1,240 @@
 <template>
-  <div class="p-6 w-full h-full overflow-y-auto">
-    <h2 class="text-2xl font-semibold mb-6">Registrar Nueva Sanción</h2>
-
-    <form
-      @submit.prevent="guardarSancion"
-      class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white shadow rounded-2xl p-6"
-    >
-      <!-- Tipo de entidad -->
-      <div class="md:col-span-2">
-        <label class="block text-sm font-medium mb-1">Entidad</label>
-        <select
-          v-model="sancion.entidad"
-          @change="cargarEntidades"
-          class="w-full border rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
-        >
-          <option value="">Seleccione una entidad</option>
-          <option value="jugador">Jugador</option>
-          <option value="entrenador">Entrenador</option>
-          <option value="arbitro">Árbitro</option>
-          <option value="club">Club</option>
-        </select>
-      </div>
-
-      <!-- Selección de entidad -->
-      <div class="md:col-span-2" v-if="listaEntidades.length > 0">
-        <label class="block text-sm font-medium mb-1">
-          Seleccione {{ sancion.entidad }}
-        </label>
-        <select
-          v-model="sancion.entidadId"
-          class="w-full border rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
-        >
-          <option value="">Seleccione</option>
-          <option
-            v-for="item in listaEntidades"
-            :key="item.id"
-            :value="item.id"
-          >
-            {{ mostrarNombre(item) }}
-          </option>
-        </select>
-      </div>
-
-      <!-- Tipo de sanción -->
-      <div>
-        <label class="block text-sm font-medium mb-1">Tipo de sanción</label>
-        <select
-          v-model="sancion.tipo"
-          class="w-full border rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
-        >
-          <option value="">Seleccione</option>
-          <option value="amonestacion">Amonestación</option>
-          <option value="expulsion">Expulsión</option>
-          <option value="suspension">Suspensión</option>
-          <option value="multa">Multa</option>
-        </select>
-      </div>
-
-      <!-- Fecha -->
-      <div>
-        <label class="block text-sm font-medium mb-1">Fecha</label>
-        <input
-          type="date"
-          v-model="sancion.fecha"
-          class="w-full border rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
-        />
-      </div>
-
-      <!-- Duración -->
-      <div>
-        <label class="block text-sm font-medium mb-1">Duración</label>
-        <input
-          type="number"
-          min="1"
-          v-model="sancion.duracion"
-          class="w-full border rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
-          placeholder="Días o Partidos"
-        />
-      </div>
-
-      <!-- Motivo -->
-      <div class="md:col-span-2">
-        <label class="block text-sm font-medium mb-1">Motivo</label>
-        <textarea
-          v-model="sancion.motivo"
-          rows="3"
-          class="w-full border rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
-          placeholder="Detalle del motivo de la sanción"
-        ></textarea>
-      </div>
-
-      <!-- Botones -->
-      <div class="md:col-span-2 flex justify-end space-x-4 mt-4">
+  <div class="p-6 bg-gray-100 min-h-screen">
+    <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg">
+      <!-- Tabs -->
+      <div class="flex border-b">
         <button
-          type="button"
-          class="px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 transition"
+          v-for="tab in tabs"
+          :key="tab"
+          @click="activeTab = tab"
+          :class="[
+            'flex-1 py-3 text-center font-semibold transition',
+            activeTab === tab
+              ? 'border-b-4 border-red-600 text-red-600'
+              : 'text-gray-500 hover:text-gray-700',
+          ]"
         >
-          Cancelar
-        </button>
-        <button
-          type="submit"
-          class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition"
-        >
-          Guardar
+          {{ tab }}
         </button>
       </div>
-    </form>
+
+      <!-- Contenido dinámico -->
+      <div class="p-6">
+        <!-- Jugador -->
+        <div v-if="activeTab === 'Jugador'">
+          <h2 class="text-xl font-bold mb-4">⚽ Sanción a Jugador</h2>
+          <form class="space-y-4">
+            <div>
+              <label class="block font-medium">Jugador</label>
+              <div class="flex gap-2 w-full justify-between">
+                <input
+                  type="text"
+                  class="border p-2 rounded w-2/3"
+                  placeholder="Buscar jugador por DNI/FICHA"
+                />
+                <button class="bg-sky-600 text-white px-4 py-2 rounded w-1/3">
+                  Buscar
+                </button>
+              </div>
+            </div>
+            <div class="info-jugador flex gap-2">
+              <p class="w-1/2 font-medium border rounded p-2">Nombre:</p>
+              <p class="w-1/2 font-medium border rounded p-2">Club:</p>
+            </div>
+
+            <div>
+              <label class="block font-medium">Fecha de Suspensión</label>
+              <input type="date" class="w-full border p-2 rounded" />
+            </div>
+
+            <div>
+              <label class="block font-medium">Duración</label>
+              <input
+                type="number"
+                placeholder="Cantidad de días/partidos"
+                class="w-full border p-2 rounded"
+              />
+            </div>
+
+            <div>
+              <label class="block font-medium">Multa (opcional)</label>
+              <input
+                type="number"
+                placeholder="Monto en $"
+                class="w-full border p-2 rounded"
+              />
+            </div>
+
+            <div>
+              <label class="block font-medium">Motivo</label>
+              <textarea class="w-full border p-2 rounded"></textarea>
+            </div>
+
+            <button class="bg-red-600 text-white px-4 py-2 rounded">
+              Guardar
+            </button>
+          </form>
+        </div>
+
+        <!-- Cuerpo Técnico -->
+        <div v-if="activeTab === 'Cuerpo Técnico'">
+          <h2 class="text-xl font-bold mb-4">
+            🎓 Sanción a Miembro del Cuerpo Técnico
+          </h2>
+          <form class="space-y-4">
+            <div>
+              <label class="block font-medium">Miembro CT</label>
+              <div class="flex gap-2 w-full justify-between">
+                <input
+                  type="text"
+                  class="border p-2 rounded w-2/3"
+                  placeholder="Buscar miembro por DNI/FICHA"
+                />
+                <button class="bg-sky-600 text-white px-4 py-2 rounded w-1/3">
+                  Buscar
+                </button>
+              </div>
+            </div>
+            <div class="info-jugador flex gap-2">
+              <p class="w-1/2 font-medium border rounded p-2">Nombre:</p>
+              <p class="w-1/2 font-medium border rounded p-2">Club:</p>
+            </div>
+
+            <div>
+              <label class="block font-medium">Fecha de Suspensión</label>
+              <input type="date" class="w-full border p-2 rounded" />
+            </div>
+
+            <div>
+              <label class="block font-medium">Duración</label>
+              <input
+                type="number"
+                placeholder="Cantidad de días/partidos"
+                class="w-full border p-2 rounded"
+              />
+            </div>
+
+            <div>
+              <label class="block font-medium">Multa (opcional)</label>
+              <input
+                type="number"
+                placeholder="Monto en $"
+                class="w-full border p-2 rounded"
+              />
+            </div>
+
+            <div>
+              <label class="block font-medium">Motivo</label>
+              <textarea class="w-full border p-2 rounded"></textarea>
+            </div>
+
+            <button class="bg-red-600 text-white px-4 py-2 rounded">
+              Guardar
+            </button>
+          </form>
+        </div>
+
+        <!-- Club -->
+        <div v-if="activeTab === 'Club'">
+          <h2 class="text-xl font-bold mb-4">🏟️ Sanción a Club</h2>
+          <form class="space-y-4">
+            <div>
+              <label class="block font-medium">Club</label>
+              <select class="w-full border p-2 rounded">
+                <option>Seleccionar...</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-medium">Tipo de Sanción</label>
+              <select class="w-full border p-2 rounded">
+                <option>Multa económica</option>
+                <option>Reducción de puntos</option>
+                <option>Advertencia</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-medium"
+                >Monto de Multa (si aplica)</label
+              >
+              <input
+                type="number"
+                placeholder="$"
+                class="w-full border p-2 rounded"
+              />
+            </div>
+
+            <div>
+              <label class="block font-medium"
+                >Puntos a reducir (si aplica)</label
+              >
+              <input
+                type="number"
+                placeholder="Ej: -3"
+                class="w-full border p-2 rounded"
+              />
+            </div>
+
+            <div>
+              <label class="block font-medium">Motivo</label>
+              <textarea class="w-full border p-2 rounded"></textarea>
+            </div>
+
+            <button class="bg-red-600 text-white px-4 py-2 rounded">
+              Guardar
+            </button>
+          </form>
+        </div>
+
+        <!-- Árbitro -->
+        <div v-if="activeTab === 'Árbitro'">
+          <h2 class="text-xl font-bold mb-4">⚖️ Sanción a Árbitro</h2>
+          <form class="space-y-4">
+            <div>
+              <label class="block font-medium">Árbitro</label>
+              <select class="w-full border p-2 rounded">
+                <option>Seleccionar...</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-medium">Duración de la sanción</label>
+              <select class="w-full border p-2 rounded">
+                <option>Días</option>
+                <option>Años</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-medium">Cantidad</label>
+              <input
+                type="number"
+                placeholder="Ej: 30 días / 1 año"
+                class="w-full border p-2 rounded"
+              />
+            </div>
+
+            <div>
+              <label class="block font-medium">Motivo</label>
+              <textarea class="w-full border p-2 rounded"></textarea>
+            </div>
+
+            <button class="bg-red-600 text-white px-4 py-2 rounded">
+              Guardar
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
-
 <script>
 export default {
   name: "RegistroSancion",
   data() {
     return {
+      show: false,
       sancion: {
         entidad: "",
         entidadId: "",
@@ -123,6 +244,8 @@ export default {
         motivo: "",
       },
       listaEntidades: [],
+      tabs: ["Jugador", "Cuerpo Técnico", "Club", "Árbitro"],
+      activeTab: "Jugador",
     };
   },
   methods: {
