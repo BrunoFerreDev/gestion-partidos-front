@@ -5,8 +5,8 @@
     <!-- Barra de búsqueda -->
     <div class="flex space-x-2 mb-6">
       <input
-        type="text"
-        v-model="query"
+        type="number"
+        v-model="id"
         @keyup.enter="buscar"
         class="flex-1 border rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
         placeholder="Escribe para buscar..."
@@ -18,36 +18,34 @@
         Buscar
       </button>
     </div>
-
-    <!-- Resultados -->
-    <div v-if="resultados.length > 0" class="overflow-x-auto">
-      <table class="w-full border border-gray-200 rounded-lg">
-        <thead>
-          <tr class="bg-gray-100 text-left">
-            <th v-for="col in columnas" :key="col" class="px-4 py-2 border-b">
-              {{ col }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="item in resultados"
-            :key="item.id"
-            class="hover:bg-gray-50"
-          >
-            <td v-for="col in columnas" :key="col" class="px-4 py-2 border-b">
-              {{ item[col.toLowerCase()] }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="flex flex-col gap-4 justify-center w-full">
+      <div v-if="tipo === 'club'" class="self-center">
+        <ClubCard />
+      </div>
+      <div v-if="tipo === 'jugador'" class="self-center">
+        <JugadorCard />
+      </div>
+      <div v-if="tipo === 'entrenador'" class="self-center">
+        <CuerpoTecnicoCard />
+      </div>
+      <div v-if="tipo === 'arbitro'" class="self-center">
+        <ArbitroCard />
+      </div>
+      <div >
+        <EstadisticasTable :entidad="tipo" :datos="resultados" />
+      </div>
     </div>
-
-    <div v-else class="text-gray-500 mt-4">Sin resultados</div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import ClubCard from "../components/ui/ClubCard.vue";
+import JugadorCard from "../components/ui/JugadorCard.vue";
+import ArbitroCard from "../components/ui/ArbitroCard.vue";
+import CuerpoTecnicoCard from "../components/ui/CuerpoTecnicoCard.vue";
+import EstadisticasTable from "../components/ui/EstadisticasTable.vue";
+
 export default {
   name: "BuscarEntidad",
   props: {
@@ -56,10 +54,17 @@ export default {
       required: true, // jugador, entrenador, club, arbitro
     },
   },
+  components: {
+    ClubCard,
+    JugadorCard,
+    ArbitroCard,
+    CuerpoTecnicoCard,
+    EstadisticasTable,
+  },
   data() {
     return {
-      query: "",
-      resultados: [],
+      resultados: {},
+      id: "",
     };
   },
   computed: {
@@ -97,19 +102,12 @@ export default {
   methods: {
     async buscar() {
       // 🔹 Aquí cambias las URLs por las de tu backend Spring Boot
-      let url = `/api/${this.tipo}s?search=${this.query}`;
+      let url = `http://localhost:8080/api/${this.tipo}/${this.id}`;
       try {
-        const response = await fetch(url, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+        axios.get(url).then((response) => {
+          this.resultados = response.data;
+          console.log(this.resultados);
         });
-        if (response.ok) {
-          this.resultados = await response.json();
-        } else {
-          this.resultados = [];
-        }
       } catch (error) {
         console.error("Error en búsqueda:", error);
       }

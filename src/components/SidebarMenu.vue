@@ -163,7 +163,7 @@ export default {
   data() {
     return {
       open: {
-        torneos: true,
+        torneos: false,
         jugadores: false,
         entrenadores: false,
         clubes: false,
