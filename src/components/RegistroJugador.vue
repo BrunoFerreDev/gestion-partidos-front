@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6 w-full h-full overflow-y-auto">
+  <div class="p-6 w-full h-full overflow-y-auto ">
     <h2 class="text-2xl font-semibold mb-6">Registro de Jugador</h2>
 
     <form

@@ -18,23 +18,23 @@
         Buscar
       </button>
     </div>
-    <div class="flex flex-col gap-4 justify-center w-full">
+    <!-- <div class="flex flex-col gap-4 justify-center w-full ">
       <div v-if="tipo === 'club'" class="self-center">
-        <ClubCard />
+        <ClubCard :club="resultados" />
       </div>
       <div v-if="tipo === 'jugador'" class="self-center">
-        <JugadorCard />
+        <JugadorCard :jugador="resultados" />
       </div>
       <div v-if="tipo === 'entrenador'" class="self-center">
-        <CuerpoTecnicoCard />
+        <CuerpoTecnicoCard :entrenador="resultados" />
       </div>
       <div v-if="tipo === 'arbitro'" class="self-center">
-        <ArbitroCard />
+        <ArbitroCard :arbitro="resultados" />
       </div>
-      <div >
+      <div>
         <EstadisticasTable :entidad="tipo" :datos="resultados" />
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 

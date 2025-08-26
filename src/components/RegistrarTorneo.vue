@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto p-6 bg-white rounded-2xl shadow-md">
+  <div class="mx-auto p-6 bg-white rounded-2xl shadow-md max-w-6xl my-10 border">
     <h2 class="text-2xl font-bold mb-6 text-gray-800">Crear Torneo</h2>
 
     <form @submit.prevent="crearTorneo" class="space-y-4">
@@ -10,7 +10,7 @@
           v-model="form.nombre"
           type="text"
           required
-          class="mt-1 block w-full rounded-lg border-gray-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10"
+          class="mt-1 block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10"
         />
       </div>
 
@@ -23,7 +23,7 @@
           min="2020"
           max="2100"
           required
-          class="mt-1 block w-full rounded-lg border-gray-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10 p-2"
+          class="mt-1 block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10 p-2"
         />
       </div>
 
@@ -32,7 +32,7 @@
         <label class="block text-sm font-medium text-gray-700">Categoría</label>
         <select
           v-model="form.categoria"
-          class="mt-1 block w-full rounded-lg border-gray-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10 p-2"
+          class="mt-1 block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10 p-2"
         >
           <option value="">Seleccionar...</option>
           <option value="Primera">Primera</option>
@@ -49,7 +49,7 @@
         >
         <select
           v-model="form.tipo"
-          class="mt-1 block w-full rounded-lg border-gray-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10 p-2"
+          class="mt-1 block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10 p-2"
         >
           <option value="">Seleccionar...</option>
           <option value="Liga">Liga (todos contra todos)</option>
@@ -68,7 +68,7 @@
             v-model="form.fechaInicio"
             type="date"
             required
-            class="mt-1 block w-full rounded-lg border-gray-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10 p-2"
+            class="mt-1 block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10 p-2"
           />
         </div>
         <div>
@@ -79,7 +79,7 @@
             v-model="form.fechaFin"
             type="date"
             required
-            class="mt-1 block w-full rounded-lg border-gray-500 shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10 p-2"
+            class="mt-1 block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10 p-2"
           />
         </div>
       </div>

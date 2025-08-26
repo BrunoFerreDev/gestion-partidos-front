@@ -4,7 +4,7 @@
 
     <form
       @submit.prevent="guardarArbitro"
-      class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white shadow rounded-2xl p-6"
+      class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white shadow rounded-2xl p-6 border"
     >
       <!-- Nombre -->
       <div>

@@ -1,6 +1,6 @@
 <template>
-  <div class="p-6 bg-gray-100 min-h-screen">
-    <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg">
+  <div class="p-6 w-full h-[calc(85vh-70px)] overflow-y-auto">
+    <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg border">
       <!-- Tabs -->
       <div class="flex border-b">
         <button
@@ -26,19 +26,34 @@
           <form class="space-y-4">
             <div>
               <label class="block font-medium">Jugador</label>
-              <div class="flex gap-2 w-full justify-between">
+              <div class="flex gap-2 w-full justify-between items-center">
                 <input
+                  v-model="id"
                   type="text"
                   class="border p-2 rounded w-2/3"
                   placeholder="Buscar jugador por DNI/FICHA"
+                  @keypress.enter.prevent="buscarJugador"
                 />
-                <button class="bg-sky-600 text-white px-4 py-2 rounded w-1/3">
+                <button
+                  type="submit"
+                  class="bg-sky-600 text-white px-4 py-2 rounded w-1/5"
+                  @click.prevent="buscarJugador"
+                >
                   Buscar
+                </button>
+                <button
+                  type="submit"
+                  class="bg-orange-600 text-white px-4 py-2 rounded w-1/5"
+                  @click.prevent="limpiar"
+                >
+                  Limpiar
                 </button>
               </div>
             </div>
-            <div class="info-jugador flex gap-2">
-              <p class="w-1/2 font-medium border rounded p-2">Nombre:</p>
+            <div class="info-jugador flex gap-2" v-if="resultados.nombre">
+              <p class="w-1/2 font-medium border rounded p-2">
+                Nombre: {{ resultados.nombre + " " + resultados.apellido }}
+              </p>
               <p class="w-1/2 font-medium border rounded p-2">Club:</p>
             </div>
 
@@ -47,22 +62,23 @@
               <input type="date" class="w-full border p-2 rounded" />
             </div>
 
-            <div>
-              <label class="block font-medium">Duración</label>
-              <input
-                type="number"
-                placeholder="Cantidad de días/partidos"
-                class="w-full border p-2 rounded"
-              />
-            </div>
-
-            <div>
-              <label class="block font-medium">Multa (opcional)</label>
-              <input
-                type="number"
-                placeholder="Monto en $"
-                class="w-full border p-2 rounded"
-              />
+            <div class="flex gap-2 w-full">
+              <label class="block font-medium w-1/2"
+                >Duración
+                <input
+                  type="number"
+                  placeholder="Cantidad de días/partidos"
+                  class="w-full border p-2 rounded"
+                />
+              </label>
+              <label class="block font-medium w-1/2"
+                >Multa (opcional)
+                <input
+                  type="number"
+                  placeholder="Monto en $"
+                  class="w-full border p-2 rounded"
+                />
+              </label>
             </div>
 
             <div>
@@ -70,7 +86,7 @@
               <textarea class="w-full border p-2 rounded"></textarea>
             </div>
 
-            <button class="bg-red-600 text-white px-4 py-2 rounded">
+            <button class="bg-red-600 text-white px-4 py-2 rounded mx-auto">
               Guardar
             </button>
           </form>
@@ -90,8 +106,13 @@
                   class="border p-2 rounded w-2/3"
                   placeholder="Buscar miembro por DNI/FICHA"
                 />
-                <button class="bg-sky-600 text-white px-4 py-2 rounded w-1/3">
+                <button class="bg-sky-600 text-white px-4 py-2 rounded w-1/5">
                   Buscar
+                </button>
+                <button
+                  class="bg-orange-600 text-white px-4 py-2 rounded w-1/5"
+                >
+                  Limpiar
                 </button>
               </div>
             </div>
@@ -105,30 +126,30 @@
               <input type="date" class="w-full border p-2 rounded" />
             </div>
 
-            <div>
-              <label class="block font-medium">Duración</label>
-              <input
-                type="number"
-                placeholder="Cantidad de días/partidos"
-                class="w-full border p-2 rounded"
-              />
+            <div class="flex gap-2 w-full">
+              <label class="block font-medium w-1/2"
+                >Duración
+                <input
+                  type="number"
+                  placeholder="Cantidad de días/partidos"
+                  class="w-full border p-2 rounded"
+                />
+              </label>
+              <label class="block font-medium w-1/2"
+                >Multa (opcional)
+                <input
+                  type="number"
+                  placeholder="Monto en $"
+                  class="w-full border p-2 rounded"
+                />
+              </label>
             </div>
-
-            <div>
-              <label class="block font-medium">Multa (opcional)</label>
-              <input
-                type="number"
-                placeholder="Monto en $"
-                class="w-full border p-2 rounded"
-              />
-            </div>
-
             <div>
               <label class="block font-medium">Motivo</label>
               <textarea class="w-full border p-2 rounded"></textarea>
             </div>
 
-            <button class="bg-red-600 text-white px-4 py-2 rounded">
+            <button class="bg-red-600 text-white px-4 py-2 rounded mx-auto">
               Guardar
             </button>
           </form>
@@ -230,10 +251,13 @@
   </div>
 </template>
 <script>
+import axios from "axios";
+
 export default {
   name: "RegistroSancion",
   data() {
     return {
+      id: "",
       show: false,
       sancion: {
         entidad: "",
@@ -246,6 +270,7 @@ export default {
       listaEntidades: [],
       tabs: ["Jugador", "Cuerpo Técnico", "Club", "Árbitro"],
       activeTab: "Jugador",
+      resultados: {},
     };
   },
   methods: {
@@ -303,6 +328,35 @@ export default {
         console.error("Error guardando sanción:", error);
       }
     },
+    limpiar() {
+      this.resultados = {};
+      this.id = "";
+    },
+  },
+  computed: {
+    buscarJugador() {
+      if (!this.id) {
+        alert("Debe ingresar un ID");
+        return;
+      }
+      let id = Number(this.id);
+      console.log("Buscando jugador...");
+      axios
+        .get("http://localhost:8080/api/jugador/" + id)
+        .then((response) => {
+          this.resultados = response.data;
+          console.log(this.resultados);
+        })
+        .catch((error) => {
+          console.error("Error buscando jugador:", error);
+        });
+    },
   },
 };
 </script>
+<style scoped>
+textarea {
+  resize: none;
+  height: 100px;
+}
+</style>

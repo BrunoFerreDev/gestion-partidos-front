@@ -2,7 +2,7 @@
   <div class="p-6 w-full h-full overflow-y-auto">
     <h2 class="text-2xl font-semibold mb-6">Registro de Club</h2>
 
-    <form class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white shadow rounded-2xl p-6">
+    <form class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white shadow rounded-2xl p-6 border">
 
       <!-- Nombre del club -->
       <div class="md:col-span-2">
