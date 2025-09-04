@@ -6,7 +6,7 @@
         <button
           v-for="tab in tabs"
           :key="tab"
-          @click="activeTab = tab"
+          @click="cambiarTab(tab)"
           :class="[
             'flex-1 py-3 text-center font-semibold transition',
             activeTab === tab
@@ -54,7 +54,7 @@
               <p class="w-1/2 font-medium border rounded p-2">
                 Nombre: {{ resultados.nombre + " " + resultados.apellido }}
               </p>
-              <p class="w-1/2 font-medium border rounded p-2">Club:</p>
+              <p class="w-1/2 font-medium border rounded p-2">Club: {{ resultados.nombreClub }}</p>
             </div>
 
             <div>
@@ -116,7 +116,7 @@
                 </button>
               </div>
             </div>
-            <div class="info-jugador flex gap-2">
+            <div class="info-jugador flex gap-2" v-if="resultados.nombre">
               <p class="w-1/2 font-medium border rounded p-2">Nombre:</p>
               <p class="w-1/2 font-medium border rounded p-2">Club:</p>
             </div>
@@ -159,11 +159,33 @@
         <div v-if="activeTab === 'Club'">
           <h2 class="text-xl font-bold mb-4">🏟️ Sanción a Club</h2>
           <form class="space-y-4">
-            <div>
-              <label class="block font-medium">Club</label>
-              <select class="w-full border p-2 rounded">
-                <option>Seleccionar...</option>
-              </select>
+            <div class="flex gap-2 w-full justify-between items-center">
+              <input
+                v-model="id"
+                type="text"
+                class="border p-2 rounded w-2/3"
+                placeholder="Buscar club por DNI/FICHA"
+                @keypress.enter.prevent="buscarClub"
+              />
+              <button
+                type="submit"
+                class="bg-sky-600 text-white px-4 py-2 rounded w-1/5"
+                @click.prevent="buscarClub"
+              >
+                Buscar
+              </button>
+              <button
+                type="submit"
+                class="bg-orange-600 text-white px-4 py-2 rounded w-1/5"
+                @click.prevent="limpiar"
+              >
+                Limpiar
+              </button>
+            </div>
+            <div class="info-jugador flex gap-2" v-if="resultados.nombre">
+              <p class="w-1/2 font-medium border rounded p-2">
+                Club: {{ resultados.nombre }}
+              </p>
             </div>
 
             <div>
@@ -212,11 +234,37 @@
         <div v-if="activeTab === 'Árbitro'">
           <h2 class="text-xl font-bold mb-4">⚖️ Sanción a Árbitro</h2>
           <form class="space-y-4">
-            <div>
+            <div class="flex flex-col gap-2">
               <label class="block font-medium">Árbitro</label>
-              <select class="w-full border p-2 rounded">
-                <option>Seleccionar...</option>
-              </select>
+              <div class="flex gap-2 w-full justify-between items-center">
+                <input
+                  v-model="id"
+                  type="text"
+                  class="border p-2 rounded w-2/3"
+                  placeholder="Buscar árbitro por DNI/FICHA"
+                  @keypress.enter.prevent="buscarArbitro"
+                />
+                <button
+                  type="submit"
+                  class="bg-sky-600 text-white px-4 py-2 rounded w-1/5"
+                  @click.prevent="buscarArbitro"
+                >
+                  Buscar
+                </button>
+                <button
+                  type="submit"
+                  class="bg-orange-600 text-white px-4 py-2 rounded w-1/5"
+                  @click.prevent="limpiar"
+                >
+                  Limpiar
+                </button>
+              </div>
+              <div class="info-jugador flex gap-2" v-if="resultados.nombre">
+                <p class="w-1/2 font-medium border rounded p-2">
+                  Nombre: {{ resultados.nombre + " " + resultados.apellido }}
+                </p>
+                <p :class="resultados.estadoPersona === 'ACTIVO' ? 'w-1/2 font-medium border rounded p-2 text-green-600' : 'w-1/2 font-medium border rounded p-2 text-red-600'">Estado: {{ resultados.estadoPersona }}</p>
+              </div>
             </div>
 
             <div>
@@ -328,6 +376,10 @@ export default {
         console.error("Error guardando sanción:", error);
       }
     },
+    cambiarTab(tab) {
+      this.limpiar();
+      this.activeTab = tab;
+    },
     limpiar() {
       this.resultados = {};
       this.id = "";
@@ -349,6 +401,57 @@ export default {
         })
         .catch((error) => {
           console.error("Error buscando jugador:", error);
+        });
+    },
+    buscarClub() {
+      if (!this.id) {
+        alert("Debe ingresar un ID");
+        return;
+      }
+      let id = Number(this.id);
+      console.log("Buscando club...");
+      axios
+        .get("http://localhost:8080/api/club/" + id)
+        .then((response) => {
+          this.resultados = response.data;
+          console.log(this.resultados);
+        })
+        .catch((error) => {
+          console.error("Error buscando club:", error);
+        });
+    },
+    buscarArbitro() {
+      if (!this.id) {
+        alert("Debe ingresar un ID");
+        return;
+      }
+      let id = Number(this.id);
+      console.log("Buscando arbitro...");
+      axios
+        .get("http://localhost:8080/api/arbitros/" + id)
+        .then((response) => {
+          this.resultados = response.data;
+          console.log(this.resultados);
+        })
+        .catch((error) => {
+          console.error("Error buscando arbitro:", error);
+        });
+    },
+    buscarCuerpoTecnico() {
+      if (!this.id) {
+        alert("Debe ingresar un ID");
+        return;
+      }
+      let id = Number(this.id);
+      console.log("Buscando cuerpo tecnico...");
+      axios
+        .get("http://localhost:8080/api/cuerpotecnico/" + id)
+        .then((response) => {
+          this.resultados = response.data;
+          console.log(this.resultados);
+        })
+        .catch((error) => {
+          console.error("Error buscando cuerpo tecnico:", error);
         });
     },
   },

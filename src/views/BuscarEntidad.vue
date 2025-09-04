@@ -18,6 +18,7 @@
         Buscar
       </button>
     </div>
+    <Torneo v-if="tipo === 'torneo'" />
     <!-- <div class="flex flex-col gap-4 justify-center w-full ">
       <div v-if="tipo === 'club'" class="self-center">
         <ClubCard :club="resultados" />
@@ -45,6 +46,7 @@ import JugadorCard from "../components/ui/JugadorCard.vue";
 import ArbitroCard from "../components/ui/ArbitroCard.vue";
 import CuerpoTecnicoCard from "../components/ui/CuerpoTecnicoCard.vue";
 import EstadisticasTable from "../components/ui/EstadisticasTable.vue";
+import Torneo from "../components/ui/Torneo.vue";
 
 export default {
   name: "BuscarEntidad",
@@ -60,6 +62,7 @@ export default {
     ArbitroCard,
     CuerpoTecnicoCard,
     EstadisticasTable,
+    Torneo,
   },
   data() {
     return {
