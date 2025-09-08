@@ -22,14 +22,14 @@ import SidebarMenu from "./components/SidebarMenu.vue";
         <span>Club: Nombre del club</span>
       </article>
       <img
-        src="../public/vite.svg "
+        src="/vite.svg "
         alt="Logo del club"
         width="50"
         height="100"
       />
     </div>
   </header>
-  <main class="flex gap-5 mt-4 h-[80vh]">
+  <main class="flex gap-5 mt-2 h-[80vh]">
     <SidebarMenu />
     <div class="w-full border border-gray-400 rounded">
       <router-view></router-view>

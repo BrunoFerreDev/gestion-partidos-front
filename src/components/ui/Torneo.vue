@@ -1,70 +1,30 @@
 <template>
-  <div class="p-6 space-y-6 max-w-5xl mx-auto">
+  <div class="p-6 space-y-6 w-full ">
     <!-- Datos del torneo -->
-    <div class=" border rounded-lg flex flex-col items-start p-4 ">
-      <div class="flex items-start justify-between w-full flex-wrap gap-4">
+    <div class="flex justify-between ">
+      <div class="border rounded flex items-start justify-between w-4/5 flex-wrap gap-4 p-2">
         <h2 class="text-2xl font-bold text-gray-800 w-full"> {{ torneo.nombre }}</h2>
         <div class="flex flex-col gap-2">
           <p class="inline-flex gap-2"><span class="font-bold">Categoria: </span>{{ torneo.categoria}}</p>
           <p class="inline-flex gap-2"><span class="font-bold">Tipo: </span>{{ torneo.tipo }}</p>
         </div>
         <div class="flex flex-col gap-2">
-          <p class="inline-flex gap-2"><span class="font-bold">Estado: </span>{{ torneo.estado.replace("_"," ") }}</p>
+          <p class="inline-flex gap-2"><span class="font-bold">Estado: </span>{{ torneo.estado }}</p>
           <p class="inline-flex gap-2"><span class="font-bold">Temporada: </span>{{ torneo.temporada }}</p>
         </div>
         <div class="flex flex-col gap-2">
           <p class="inline-flex gap-2"><span class="font-bold">Fecha Inicio: </span>{{ torneo.fechaInicio }}</p>
           <p class="inline-flex gap-2"><span class="font-bold">Fecha Fin: </span>{{ torneo.fechaFin }}</p>
         </div>
-       
-      </div>    
+      </div>  
+      <div class="btn-group flex flex-col items-center justify-center gap-2 w-1/5" >
+      <button class="btn-primary w-1/2 bg-green-400 p-2 rounded font-bold cursor-pointer hover:bg-green-500">Crear Torneo</button>
+      <button class="btn-secondary w-1/2 bg-red-400 p-2 rounded font-bold cursor-pointer hover:bg-red-500"> Cancelar</button>
+    </div>  
   </div>
-
-    <!-- Zonas -->
-    <div class="grid grid-cols-2 gap-6  mx-auto">
-      <!-- Zona 1 -->
-      <div class="bg-gray-200 rounded-2xl p-4 text-center">
-        <h2 class="font-semibold mb-2">ZONA 1</h2>
-        <ul class="space-y-2">
-          <li
-            v-for="club in zona1"
-            :key="club.id"
-            class="bg-white p-2 rounded shadow-lg flex justify-between items-center"
-          >
-            <span>{{ club.nombre }}</span>
-            <button
-              @click="removerDeZona(club, 1)"
-              class="text-red-500 hover:text-red-700 font-bold"
-            >
-              ✖
-            </button>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Zona 2 -->
-      <div class="bg-gray-200 rounded-2xl p-4 text-center">
-        <h2 class="font-semibold mb-2">ZONA 2</h2>
-        <ul class="space-y-2">
-          <li
-            v-for="club in zona2"
-            :key="club.id"
-            class="bg-white p-2 rounded shadow-lg flex justify-between items-center"
-          >
-            <span>{{ club.nombre }}</span>
-            <button
-              @click="removerDeZona(club, 2)"
-              class="text-red-500 hover:text-red-700 font-bold"
-            >
-              ✖
-            </button>
-          </li>
-        </ul>
-      </div>
-    </div>
-
+  <div class="flex items-start gap-4">
     <!-- Tabla de equipos -->
-    <div v-if="equipos.length > 0" class="overflow-x-auto rounded border border-gray-200  container mx-auto">
+    <div v-if="torneo.id>0 && equipos.length>0" class="overflow-x-auto rounded border border-gray-200 w-3/5">
       <table class=" text-center overflow-hidden w-full">
         <thead class="bg-gray-100">
           <tr>
@@ -98,20 +58,66 @@
           </tr>
         </tbody>
       </table>
+
     </div>
-    <div v-else>
-      <p>No hay equipos disponibles</p>
+       <!-- Zonas -->
+     <div class="flex flex-wrap gap-6">
+      <!-- Zona 1 -->
+      <div class="bg-gray-200 rounded-2xl p-4 text-center w-3/4">
+        <h2 class="font-semibold mb-2">ZONA 1</h2>
+        <ul class="space-y-2">
+          <li
+            v-for="club in zona1"
+            :key="club.id"
+            class="bg-white p-2 rounded shadow-lg flex justify-between items-center"
+          >
+            <span>{{ club.nombre }}</span>
+            <button
+              @click="removerDeZona(club, 1)"
+              class="text-red-500 hover:text-red-700 font-bold"
+            >
+              ✖
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Zona 2 -->
+      <div class="bg-gray-200 rounded-2xl p-4 text-center w-3/4">
+        <h2 class="font-semibold mb-2">ZONA 2</h2>
+        <ul class="space-y-2">
+          <li
+            v-for="club in zona2"
+            :key="club.id"
+            class="bg-white p-2 rounded shadow-lg flex justify-between items-center"
+          >
+            <span>{{ club.nombre }}</span>
+            <button
+              @click="removerDeZona(club, 2)"
+              class="text-red-500 hover:text-red-700 font-bold"
+            >
+              ✖
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
+</div>
 </template>
 
 <script setup>
 import { onMounted, ref } from "vue"
 import axios from "axios"
 
+const props = defineProps({
+    torneo: {
+        type: Object,
+        required: true
+    }
+})
 // Estos equipos vendrían del backend con GET /api/equipos
 const equipos = ref([])
-const torneo = ref({})
 
 const zona1 = ref([])
 const zona2 = ref([])
@@ -145,19 +151,10 @@ const fetchClubes = async () => {
   }
 }
 
-// Cargar datos del torneo desde el backend
-const fetchTorneo = async () => {
-  try {
-    const response = await axios.get("http://localhost:8080/api/torneo/1") // 👈 ejemplo: torneo con id=1
-    torneo.value = response.data
-  } catch (error) {
-    console.error("Error al cargar el torneo:", error)
-  }
-}
+
 // Ejecutar al montar el componente
 onMounted(() => {
   fetchClubes()
-  fetchTorneo()
 })
 
 </script>

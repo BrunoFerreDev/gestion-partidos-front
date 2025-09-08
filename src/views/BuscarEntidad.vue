@@ -3,7 +3,7 @@
     <h2 class="text-2xl font-semibold mb-6">Buscar {{ titulo }}</h2>
 
     <!-- Barra de búsqueda -->
-    <div class="flex space-x-2 mb-6">
+    <div class="flex space-x-2 mb-6" v-if="!resultados.id > 0">
       <input
         type="number"
         v-model="id"
@@ -18,9 +18,9 @@
         Buscar
       </button>
     </div>
-    <Torneo v-if="tipo === 'torneo'" />
+    <Torneo v-if="tipo === 'torneo' && resultados.id" :torneo="resultados" />
     <!-- <div class="flex flex-col gap-4 justify-center w-full ">
-      <div v-if="tipo === 'club'" class="self-center">
+      <div v-if="tipo === 'club'" class="self-center">  
         <ClubCard :club="resultados" />
       </div>
       <div v-if="tipo === 'jugador'" class="self-center">
@@ -103,18 +103,18 @@ export default {
     },
   },
   methods: {
-    async buscar() {
-      // 🔹 Aquí cambias las URLs por las de tu backend Spring Boot
-      let url = `http://localhost:8080/api/${this.tipo}/${this.id}`;
-      try {
-        axios.get(url).then((response) => {
-          this.resultados = response.data;
-          console.log(this.resultados);
-        });
-      } catch (error) {
-        console.error("Error en búsqueda:", error);
-      }
-    },
-  },
-};
+  // Cargar datos del torneo desde el backend
+buscar(){
+let id = Number(this.id); 
+axios.get("http://localhost:8080/api/torneo/" + id)
+.then((response) => {
+  this.resultados = response.data;
+  console.log(this.resultados);
+})
+.catch((error) => {
+  console.error("Error buscando torneo:", error);
+});
+}
+}
+}
 </script>

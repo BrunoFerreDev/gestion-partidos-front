@@ -1,38 +1,36 @@
 <template>
-  <div class="mx-auto p-6 bg-white rounded-2xl shadow-md max-w-6xl my-10 border">
+  <div class="mx-auto p-6 bg-white rounded-2xl shadow-md max-w-4xl my-10 border">
     <h2 class="text-2xl font-bold mb-6 text-gray-800">Crear Torneo</h2>
-
-    <form @submit.prevent="crearTorneo" class="space-y-4">
+    <form @submit.prevent="crearTorneo" class="flex flex-col space-y-4">
       <!-- Nombre -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Nombre</label>
+      <div class="flex items-center gap-2">
+        <label class="flex flex-col w-2/4 text-lg font-medium text-gray-700">Nombre
         <input
           v-model="form.nombre"
           type="text"
           required
-          class="mt-1 block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10"
+          class="mt-1 p-2 w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10"
         />
-      </div>
-
-      <!-- Temporada -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Temporada</label>
+      </label>
+        <label class="flex flex-col w-2/4 text-lg font-medium text-gray-700">Temporada
         <input
           v-model="form.temporada"
           type="number"
           min="2020"
           max="2100"
           required
-          class="mt-1 block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10 p-2"
+          class="mt-1 p-2 w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10"
         />
+      </label>
       </div>
 
-      <!-- Categoría -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Categoría</label>
+      <!-- Categoría  y Tipo de torneo-->
+      <div class="flex gap-4 items-start">
+      <div class="flex flex-col items-start gap-2 w-2/4">
+        <label class="flex text-lg font-medium text-gray-700">Categoría</label>
         <select
           v-model="form.categoria"
-          class="mt-1 block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10 p-2"
+          class="mt-1 p-2 w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10"
         >
           <option value="">Seleccionar...</option>
           <option value="Primera">Primera</option>
@@ -41,15 +39,11 @@
           <option value="Femenino">Femenino</option>
         </select>
       </div>
-
-      <!-- Tipo -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700"
-          >Tipo de torneo</label
-        >
+      <div class="flex flex-col items-start gap-2 w-2/4">
+        <label class="flex text-lg font-medium text-gray-700">Tipo de torneo</label>
         <select
           v-model="form.tipo"
-          class="mt-1 block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10 p-2"
+          class="mt-1 p-2 w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10"
         >
           <option value="">Seleccionar...</option>
           <option value="Liga">Liga (todos contra todos)</option>
@@ -57,42 +51,39 @@
           <option value="Mixto">Mixto</option>
         </select>
       </div>
-
+      </div>
       <!-- Fechas -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700"
-            >Fecha de inicio</label
-          >
+      <div class="flex items-center justify-around gap-2">
+          <label class="flex flex-col text-lg font-medium text-gray-700 w-2/4"
+            >Fecha de inicio
           <input
             v-model="form.fechaInicio"
             type="date"
             required
-            class="mt-1 block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10 p-2"
+            class="mt-1 p-2 w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10"
           />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700"
-            >Fecha de fin</label
-          >
+          </label>
+          <label class="flex flex-col text-lg font-medium text-gray-700 w-2/4"
+            >Fecha de fin
           <input
             v-model="form.fechaFin"
             type="date"
             required
-            class="mt-1 block w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10 p-2"
+            class="mt-1 p-2 w-full rounded-lg border shadow-sm focus:border-blue-500 focus:ring-blue-500 h-10"
           />
-        </div>
+          </label
+          >
       </div>
 
       <!-- Botón -->
-      <div class="pt-4">
+      <div class="pt-4 flex items-center justify-center">
         <button
           type="submit"
-          class="w-full bg-blue-600 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition"
+          class="w-2/4 self-center bg-blue-600 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition"
         >
           Crear Torneo
         </button>
-      </div>
+      </div>  
     </form>
   </div>
 </template>
