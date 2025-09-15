@@ -1,19 +1,14 @@
 <template>
-  <div class="p-6 w-full h-[calc(85vh-70px)] overflow-y-auto">
-    <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg border">
+  <div class="p-6 w-full">
+    <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg border h-full overflow-y-auto">
       <!-- Tabs -->
       <div class="flex border-b">
-        <button
-          v-for="tab in tabs"
-          :key="tab"
-          @click="cambiarTab(tab)"
-          :class="[
-            'flex-1 py-3 text-center font-semibold transition',
-            activeTab === tab
-              ? 'border-b-4 border-red-600 text-red-600'
-              : 'text-gray-500 hover:text-gray-700',
-          ]"
-        >
+        <button v-for="tab in tabs" :key="tab" @click="cambiarTab(tab)" :class="[
+          'flex-1 py-3 text-center font-semibold transition',
+          activeTab === tab
+            ? 'border-b-4 border-red-600 text-red-600'
+            : 'text-gray-500 hover:text-gray-700',
+        ]">
           {{ tab }}
         </button>
       </div>
@@ -21,288 +16,33 @@
       <!-- Contenido dinámico -->
       <div class="p-6">
         <!-- Jugador -->
-        <div v-if="activeTab === 'Jugador'">
-          <h2 class="text-xl font-bold mb-4">⚽ Sanción a Jugador</h2>
-          <form class="space-y-4">
-            <div>
-              <label class="block font-medium">Jugador</label>
-              <div class="flex gap-2 w-full justify-between items-center">
-                <input
-                  v-model="id"
-                  type="text"
-                  class="border p-2 rounded w-2/3"
-                  placeholder="Buscar jugador por DNI/FICHA"
-                  @keypress.enter.prevent="buscarJugador"
-                />
-                <button
-                  type="submit"
-                  class="bg-sky-600 text-white px-4 py-2 rounded w-1/5"
-                  @click.prevent="buscarJugador"
-                >
-                  Buscar
-                </button>
-                <button
-                  type="submit"
-                  class="bg-orange-600 text-white px-4 py-2 rounded w-1/5"
-                  @click.prevent="limpiar"
-                >
-                  Limpiar
-                </button>
-              </div>
-            </div>
-            <div class="info-jugador flex gap-2" v-if="resultados.nombre">
-              <p class="w-1/2 font-medium border rounded p-2">
-                Nombre: {{ resultados.nombre + " " + resultados.apellido }}
-              </p>
-              <p class="w-1/2 font-medium border rounded p-2">Club: {{ resultados.nombreClub }}</p>
-            </div>
-
-            <div>
-              <label class="block font-medium">Fecha de Suspensión</label>
-              <input type="date" class="w-full border p-2 rounded" />
-            </div>
-
-            <div class="flex gap-2 w-full">
-              <label class="block font-medium w-1/2"
-                >Duración
-                <input
-                  type="number"
-                  placeholder="Cantidad de días/partidos"
-                  class="w-full border p-2 rounded"
-                />
-              </label>
-              <label class="block font-medium w-1/2"
-                >Multa (opcional)
-                <input
-                  type="number"
-                  placeholder="Monto en $"
-                  class="w-full border p-2 rounded"
-                />
-              </label>
-            </div>
-
-            <div>
-              <label class="block font-medium">Motivo</label>
-              <textarea class="w-full border p-2 rounded"></textarea>
-            </div>
-
-            <button class="bg-red-600 text-white px-4 py-2 rounded mx-auto">
-              Guardar
-            </button>
-          </form>
-        </div>
-
+        <JugadorSancion v-if="activeTab === 'Jugador'" />
         <!-- Cuerpo Técnico -->
-        <div v-if="activeTab === 'Cuerpo Técnico'">
-          <h2 class="text-xl font-bold mb-4">
-            🎓 Sanción a Miembro del Cuerpo Técnico
-          </h2>
-          <form class="space-y-4">
-            <div>
-              <label class="block font-medium">Miembro CT</label>
-              <div class="flex gap-2 w-full justify-between">
-                <input
-                  type="text"
-                  class="border p-2 rounded w-2/3"
-                  placeholder="Buscar miembro por DNI/FICHA"
-                />
-                <button class="bg-sky-600 text-white px-4 py-2 rounded w-1/5">
-                  Buscar
-                </button>
-                <button
-                  class="bg-orange-600 text-white px-4 py-2 rounded w-1/5"
-                >
-                  Limpiar
-                </button>
-              </div>
-            </div>
-            <div class="info-jugador flex gap-2" v-if="resultados.nombre">
-              <p class="w-1/2 font-medium border rounded p-2">Nombre:</p>
-              <p class="w-1/2 font-medium border rounded p-2">Club:</p>
-            </div>
-
-            <div>
-              <label class="block font-medium">Fecha de Suspensión</label>
-              <input type="date" class="w-full border p-2 rounded" />
-            </div>
-
-            <div class="flex gap-2 w-full">
-              <label class="block font-medium w-1/2"
-                >Duración
-                <input
-                  type="number"
-                  placeholder="Cantidad de días/partidos"
-                  class="w-full border p-2 rounded"
-                />
-              </label>
-              <label class="block font-medium w-1/2"
-                >Multa (opcional)
-                <input
-                  type="number"
-                  placeholder="Monto en $"
-                  class="w-full border p-2 rounded"
-                />
-              </label>
-            </div>
-            <div>
-              <label class="block font-medium">Motivo</label>
-              <textarea class="w-full border p-2 rounded"></textarea>
-            </div>
-
-            <button class="bg-red-600 text-white px-4 py-2 rounded mx-auto">
-              Guardar
-            </button>
-          </form>
-        </div>
-
+        <CTSancion v-if="activeTab === 'Cuerpo Técnico'" />
         <!-- Club -->
-        <div v-if="activeTab === 'Club'">
-          <h2 class="text-xl font-bold mb-4">🏟️ Sanción a Club</h2>
-          <form class="space-y-4">
-            <div class="flex gap-2 w-full justify-between items-center">
-              <input
-                v-model="id"
-                type="text"
-                class="border p-2 rounded w-2/3"
-                placeholder="Buscar club por DNI/FICHA"
-                @keypress.enter.prevent="buscarClub"
-              />
-              <button
-                type="submit"
-                class="bg-sky-600 text-white px-4 py-2 rounded w-1/5"
-                @click.prevent="buscarClub"
-              >
-                Buscar
-              </button>
-              <button
-                type="submit"
-                class="bg-orange-600 text-white px-4 py-2 rounded w-1/5"
-                @click.prevent="limpiar"
-              >
-                Limpiar
-              </button>
-            </div>
-            <div class="info-jugador flex gap-2" v-if="resultados.nombre">
-              <p class="w-1/2 font-medium border rounded p-2">
-                Club: {{ resultados.nombre }}
-              </p>
-            </div>
-
-            <div>
-              <label class="block font-medium">Tipo de Sanción</label>
-              <select class="w-full border p-2 rounded">
-                <option>Multa económica</option>
-                <option>Reducción de puntos</option>
-                <option>Advertencia</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block font-medium"
-                >Monto de Multa (si aplica)</label
-              >
-              <input
-                type="number"
-                placeholder="$"
-                class="w-full border p-2 rounded"
-              />
-            </div>
-
-            <div>
-              <label class="block font-medium"
-                >Puntos a reducir (si aplica)</label
-              >
-              <input
-                type="number"
-                placeholder="Ej: -3"
-                class="w-full border p-2 rounded"
-              />
-            </div>
-
-            <div>
-              <label class="block font-medium">Motivo</label>
-              <textarea class="w-full border p-2 rounded"></textarea>
-            </div>
-
-            <button class="bg-red-600 text-white px-4 py-2 rounded">
-              Guardar
-            </button>
-          </form>
-        </div>
-
+        <ClubSancion v-if="activeTab === 'Club'" />
         <!-- Árbitro -->
-        <div v-if="activeTab === 'Árbitro'">
-          <h2 class="text-xl font-bold mb-4">⚖️ Sanción a Árbitro</h2>
-          <form class="space-y-4">
-            <div class="flex flex-col gap-2">
-              <label class="block font-medium">Árbitro</label>
-              <div class="flex gap-2 w-full justify-between items-center">
-                <input
-                  v-model="id"
-                  type="text"
-                  class="border p-2 rounded w-2/3"
-                  placeholder="Buscar árbitro por DNI/FICHA"
-                  @keypress.enter.prevent="buscarArbitro"
-                />
-                <button
-                  type="submit"
-                  class="bg-sky-600 text-white px-4 py-2 rounded w-1/5"
-                  @click.prevent="buscarArbitro"
-                >
-                  Buscar
-                </button>
-                <button
-                  type="submit"
-                  class="bg-orange-600 text-white px-4 py-2 rounded w-1/5"
-                  @click.prevent="limpiar"
-                >
-                  Limpiar
-                </button>
-              </div>
-              <div class="info-jugador flex gap-2" v-if="resultados.nombre">
-                <p class="w-1/2 font-medium border rounded p-2">
-                  Nombre: {{ resultados.nombre + " " + resultados.apellido }}
-                </p>
-                <p :class="resultados.estadoPersona === 'ACTIVO' ? 'w-1/2 font-medium border rounded p-2 text-green-600' : 'w-1/2 font-medium border rounded p-2 text-red-600'">Estado: {{ resultados.estadoPersona }}</p>
-              </div>
-            </div>
+        <ArbitroSancion v-if="activeTab === 'Árbitro'" />
 
-            <div>
-              <label class="block font-medium">Duración de la sanción</label>
-              <select class="w-full border p-2 rounded">
-                <option>Días</option>
-                <option>Años</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block font-medium">Cantidad</label>
-              <input
-                type="number"
-                placeholder="Ej: 30 días / 1 año"
-                class="w-full border p-2 rounded"
-              />
-            </div>
-
-            <div>
-              <label class="block font-medium">Motivo</label>
-              <textarea class="w-full border p-2 rounded"></textarea>
-            </div>
-
-            <button class="bg-red-600 text-white px-4 py-2 rounded">
-              Guardar
-            </button>
-          </form>
-        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
 import axios from "axios";
+import JugadorSancion from "../components/ui/JugadorSancion.vue";
+import CTSancion from "../components/ui/CTSancion.vue";
+import ClubSancion from "../components/ui/ClubSancion.vue";
+import ArbitroSancion from "../components/ui/ArbitroSancion.vue";
 
 export default {
   name: "RegistroSancion",
+  components: {
+    JugadorSancion,
+    CTSancion,
+    ClubSancion,
+    ArbitroSancion,
+  },
   data() {
     return {
       id: "",
@@ -383,76 +123,6 @@ export default {
     limpiar() {
       this.resultados = {};
       this.id = "";
-    },
-  },
-  computed: {
-    buscarJugador() {
-      if (!this.id) {
-        alert("Debe ingresar un ID");
-        return;
-      }
-      let id = Number(this.id);
-      console.log("Buscando jugador...");
-      axios
-        .get("http://localhost:8080/api/jugador/" + id)
-        .then((response) => {
-          this.resultados = response.data;
-          console.log(this.resultados);
-        })
-        .catch((error) => {
-          console.error("Error buscando jugador:", error);
-        });
-    },
-    buscarClub() {
-      if (!this.id) {
-        alert("Debe ingresar un ID");
-        return;
-      }
-      let id = Number(this.id);
-      console.log("Buscando club...");
-      axios
-        .get("http://localhost:8080/api/club/" + id)
-        .then((response) => {
-          this.resultados = response.data;
-          console.log(this.resultados);
-        })
-        .catch((error) => {
-          console.error("Error buscando club:", error);
-        });
-    },
-    buscarArbitro() {
-      if (!this.id) {
-        alert("Debe ingresar un ID");
-        return;
-      }
-      let id = Number(this.id);
-      console.log("Buscando arbitro...");
-      axios
-        .get("http://localhost:8080/api/arbitros/" + id)
-        .then((response) => {
-          this.resultados = response.data;
-          console.log(this.resultados);
-        })
-        .catch((error) => {
-          console.error("Error buscando arbitro:", error);
-        });
-    },
-    buscarCuerpoTecnico() {
-      if (!this.id) {
-        alert("Debe ingresar un ID");
-        return;
-      }
-      let id = Number(this.id);
-      console.log("Buscando cuerpo tecnico...");
-      axios
-        .get("http://localhost:8080/api/cuerpotecnico/" + id)
-        .then((response) => {
-          this.resultados = response.data;
-          console.log(this.resultados);
-        })
-        .catch((error) => {
-          console.error("Error buscando cuerpo tecnico:", error);
-        });
     },
   },
 };

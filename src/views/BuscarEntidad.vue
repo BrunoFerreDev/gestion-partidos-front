@@ -4,17 +4,10 @@
 
     <!-- Barra de búsqueda -->
     <div class="flex space-x-2 mb-6" v-if="!resultados.id > 0">
-      <input
-        type="number"
-        v-model="id"
-        @keyup.enter="buscar"
+      <input type="number" v-model="id" @keyup.enter="buscar"
         class="flex-1 border rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300"
-        placeholder="Escribe para buscar..."
-      />
-      <button
-        @click="buscar"
-        class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
-      >
+        placeholder="Escribe para buscar..." />
+      <button @click="buscar" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition">
         Buscar
       </button>
     </div>
@@ -87,6 +80,9 @@ export default {
           return "Entidad";
       }
     },
+    showTitle() {
+      return this.titulo !== "Entidad";
+    },
     columnas() {
       switch (this.tipo) {
         case "jugador":
@@ -103,18 +99,18 @@ export default {
     },
   },
   methods: {
-  // Cargar datos del torneo desde el backend
-buscar(){
-let id = Number(this.id); 
-axios.get("http://localhost:8080/api/torneo/" + id)
-.then((response) => {
-  this.resultados = response.data;
-  console.log(this.resultados);
-})
-.catch((error) => {
-  console.error("Error buscando torneo:", error);
-});
-}
-}
+    // Cargar datos del torneo desde el backend
+    buscar() {
+      let id = Number(this.id);
+      axios.get("http://localhost:8080/api/torneo/" + id)
+        .then((response) => {
+          this.resultados = response.data;
+          console.log(this.resultados);
+        })
+        .catch((error) => {
+          console.error("Error buscando torneo:", error);
+        });
+    }
+  }
 }
 </script>
