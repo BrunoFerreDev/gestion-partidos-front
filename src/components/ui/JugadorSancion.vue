@@ -88,6 +88,8 @@ export default {
                 });
         },
         limpiar() {
+            this.id = "";
+            this.resultados = {};
             this.show = false;
         },
     },
