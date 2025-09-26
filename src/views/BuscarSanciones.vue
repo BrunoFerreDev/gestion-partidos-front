@@ -101,54 +101,7 @@ export default {
     // this.cargarClubes()
   },
   methods: {
-    async cargarClubes() {
-      try {
-        const response = await fetch("/api/clubes", {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
-          }
-        })
-        if (response.ok) {
-          this.listaClubes = await response.json()
-        }
-      } catch (error) {
-        console.error("Error cargando clubes:", error)
-      }
-    },
-    async buscarPorCodigo() {
-      if (!this.codigo) return
-      try {
-        const response = await fetch(`/api/sanciones/${this.codigo}`, {
-          headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
-        })
-        if (response.ok) {
-          const sancion = await response.json()
-          this.resultados = [sancion]
-        } else {
-          this.resultados = []
-        }
-        this.buscado = true
-      } catch (error) {
-        console.error("Error buscando sanción:", error)
-      }
-    },
-    async buscarPorClub() {
-      if (!this.clubId) return
-      try {
-        const response = await fetch(`/api/sanciones/club/${this.clubId}`, {
-          headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` }
-        })
-        if (response.ok) {
-          this.resultados = await response.json()
-        } else {
-          this.resultados = []
-        }
-        this.buscado = true
-      } catch (error) {
-        console.error("Error buscando sanciones del club:", error)
-      }
-    }
+ 
   }
 }
 </script>

@@ -62,60 +62,6 @@ export default {
     };
   },
   methods: {
-    async cargarEntidades() {
-      if (!this.sancion.entidad) {
-        this.listaEntidades = [];
-        return;
-      }
-
-      try {
-        const response = await fetch(`/api/${this.sancion.entidad}s`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        if (response.ok) {
-          this.listaEntidades = await response.json();
-        }
-      } catch (error) {
-        console.error("Error cargando entidades:", error);
-      }
-    },
-    mostrarNombre(item) {
-      if (this.sancion.entidad === "club") return item.nombre;
-      return `${item.nombre} ${item.apellido}`;
-    },
-    async guardarSancion() {
-      console.log("Datos sanción:", this.sancion);
-      // Ejemplo POST
-      try {
-        const response = await fetch(`/api/sanciones`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify(this.sancion),
-        });
-        if (response.ok) {
-          alert("Sanción registrada con éxito ✅");
-          this.sancion = {
-            entidad: "",
-            entidadId: "",
-            tipo: "",
-            fecha: "",
-            duracion: "",
-            motivo: "",
-          };
-          this.listaEntidades = [];
-        } else {
-          alert("Error al guardar sanción ❌");
-        }
-      } catch (error) {
-        console.error("Error guardando sanción:", error);
-      }
-    },
     cambiarTab(tab) {
       this.limpiar();
       this.activeTab = tab;
