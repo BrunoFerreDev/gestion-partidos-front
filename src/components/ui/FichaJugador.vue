@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-100 p-6">
+  <div class="bg-gray-100 p-3">
     <div v-if="existe === false"
       class="flex gap-4 items-center justify-center p-5 border border-gray-200 rounded-lg mx-auto font-bold text-lg mb-2 bg-white">
       <label for="search" class="border-b">Buscar jugador:</label>

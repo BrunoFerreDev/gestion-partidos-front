@@ -17,6 +17,18 @@ const routes = [
         component: () => import("./components/buscar/BuscarTorneo.vue")
     },
     {
+        path: "/partidos/buscar",
+        props: route => ({
+            codigoTorneo: route.query.codigoTorneo,
+            fechaTorneo: route.query.fechaTorneo,
+            local: route.query.local,
+            visitante: route.query.visitante,
+            idPartido: route.query.idPartido
+        }),
+        name: "partidos",
+        component: () => import("./views/ParitdoView.vue")
+    },
+    {
         path: "/jugador/nuevo",
         name: "nuevo-jugador",
         component: () => import("./components/forms/FormJugador.vue")

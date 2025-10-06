@@ -15,6 +15,7 @@
                         torneo</RouterLink>
                     <RouterLink :to="{ name: 'buscar-torneo' }" class="hover:text-blue-600 cursor-pointer">Buscar
                         torneo</RouterLink>
+                        <!-- <RouterLink :to="{ name: 'partidos' }" class="hover:text-blue-600 cursor-pointer">Partidos</RouterLink> -->
                 </ul>
             </div>
         </div>
