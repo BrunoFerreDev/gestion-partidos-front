@@ -1,84 +1,183 @@
 <template>
-    <div class="flex gap-2 items-center justify-center">
-        <h2 class="text-xl font-bold w-1/2">🏟️ Sanción a Club</h2>
-        <div class="flex gap-2 w-full justify-between items-center">
-            <input v-model="id" type="text" class="border p-2 rounded w-2/2" placeholder="Buscar club por DNI/FICHA"
-                @keypress.enter.prevent="buscarClub" />
-            <button type="submit" class="bg-sky-600 text-white px-4 py-2 rounded w-1/5" @click.prevent="buscarClub">
-                Buscar
-            </button>
-            <button type="submit" class="bg-orange-600 text-white px-4 py-2 rounded w-1/5" @click.prevent="limpiar">
-                Limpiar
-            </button>
-        </div>
+  <div class="flex gap-2 items-center justify-center">
+    <h2 class="text-xl font-bold w-1/2">🏟️ Sanción a Club</h2>
+    <div class="flex gap-2 w-full justify-between items-center">
+      <input
+        v-model="id"
+        type="text"
+        class="border p-2 rounded w-2/2"
+        placeholder="Buscar club por DNI/FICHA"
+        @keypress.enter.prevent="buscarClub"
+      />
+      <button
+        type="submit"
+        class="bg-sky-600 text-white px-4 py-2 rounded w-1/5"
+        @click.prevent="buscarClub"
+      >
+        Buscar
+      </button>
+      <button
+        type="submit"
+        class="bg-orange-600 text-white px-4 py-2 rounded w-1/5"
+        @click.prevent="limpiar"
+      >
+        Limpiar
+      </button>
     </div>
-    <form class="space-y-4 pt-4">
+  </div>
+  <form class="space-y-4 pt-4">
+    <div class="info-jugador flex gap-2" v-if="resultados.nombre">
+      <p class="w-1/2 font-medium border rounded p-2">
+        Club: {{ resultados.nombre }}
+      </p>
+      <p
+        :class="
+          resultados.estado === 'ACTIVO'
+            ? 'w-1/2 font-medium border rounded p-2 text-green-600'
+            : 'w-1/2 font-medium border rounded p-2 text-red-600'
+        "
+      >
+        Estado: {{ resultados.estado }}
+      </p>
+    </div>
 
-        <div class="info-jugador flex gap-2" v-if="resultados.nombre">
-            <p class="w-1/2 font-medium border rounded p-2">
-                Club: {{ resultados.nombre }}
-            </p>
-            <p
-                :class="resultados.estado === 'ACTIVO' ? 'w-1/2 font-medium border rounded p-2 text-green-600' : 'w-1/2 font-medium border rounded p-2 text-red-600'">
-                Estado: {{ resultados.estado }}</p>
-        </div>
-
-        <div>
-            <label class="block font-medium">Tipo de Sanción</label>
-            <select class="w-full border p-2 rounded">
-                <option>Multa económica</option>
-                <option>Reducción de puntos</option>
-                <option>Advertencia</option>
-            </select>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <label class="block font-medium">Monto de Multa (si aplica)</label>
-                <input type="number" placeholder="$" class="w-full border p-2 rounded" />
-            </div>
-            <div>
-                <label class="block font-medium">Puntos a reducir (si aplica)</label>
-                <input type="number" placeholder="Ej: -3" class="w-full border p-2 rounded" />
-            </div>
-        </div>
-        <div>
-            <label class="block font-medium">Motivo</label>
-            <textarea class="w-full border p-2 rounded"></textarea>
-        </div>
-        <div class="flex items-center  justify-center w-full mx-auto">
-            <button class="bg-red-600 text-white px-4 py-2 rounded ">
-                Guardar
-            </button>
-            <button class="bg-orange-600 text-white px-4 py-2 rounded ml-2">Cancelar y Limpiar</button>
-        </div>
-    </form>
+    <div>
+      <label class="block font-medium">Tipo de Sanción</label>
+      <select class="w-full border p-2 rounded" v-model="tipo">
+        <option value="Multa económica">Multa económica</option>
+        <option value="Reducción de puntos">Reducción de puntos</option>
+        <option value="Advertencia">Advertencia</option>
+        <option value="Suspensión completa">Suspensión Completa</option>
+      </select>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block font-medium">Monto de Multa (si aplica)</label>
+        <input
+          :required="
+            tipo === 'Multa económica' || tipo === 'Suspensión completa'
+          "
+          v-model="multa"
+          type="number"
+          placeholder="$"
+          class="w-full border p-2 rounded"
+        />
+      </div>
+      <div>
+        <label class="block font-medium">Puntos a reducir (si aplica)</label>
+        <input
+          :required="
+            tipo === 'Reducción de puntos' || tipo === 'Suspensión completa'
+          "
+          v-model="puntos"
+          type="number"
+          placeholder="Ej: -3"
+          class="w-full border p-2 rounded"
+        />
+      </div>
+    </div>
+    <div>
+      <label class="block font-medium">Descripción</label>
+      <textarea
+        :required="tipo === 'Suspensión completa'"
+        class="w-full border p-2 rounded"
+        v-model="descripcion"
+      ></textarea>
+    </div>
+    <div class="flex items-center justify-center w-full mx-auto">
+      <button
+        class="bg-red-600 text-white px-4 py-2 rounded"
+        @click.prevent="guardar"
+      >
+        Guardar
+      </button>
+      <button
+        class="bg-orange-600 text-white px-4 py-2 rounded ml-2"
+        @click.prevent="limpiar"
+      >
+        Cancelar y Limpiar
+      </button>
+    </div>
+  </form>
 </template>
 <script setup>
-import axios from 'axios';
-import { ref } from 'vue';
+import axios from "axios";
+import { ref } from "vue";
 
-const id = ref('');
-
+const id = ref("");
+const tipo = ref("Advertencia");
+const multa = ref("");
+const puntos = ref("");
+const descripcion = ref("");
 const resultados = ref({});
-
 const buscarClub = () => {
-    axios.get(`http://localhost:8080/api/club/${id.value}`)
-        .then(response => {
-            resultados.value = response.data;
-        })
-        .catch(error => {
-            console.log(error);
-        })
-}
+  axios
+    .get(`http://localhost:8080/api/club/${id.value}`)
+    .then((response) => {
+      resultados.value = response.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
 const limpiar = () => {
-    id.value = '';
-    resultados.value = {};
-}
+  id.value = "";
+  tipo.value = "Advertencia";
+  multa.value = "";
+  puntos.value = "";
+  descripcion.value = "";
+  resultados.value = {};
+};
+const guardar = () => {
+  if (tipo.value === "Suspensión completa") {
+    if (descripcion.value === "") {
+      alert("Debe ingresar una descripción");
+      return;
+    }
+  }
+  if (tipo.value === "Multa económica") {
+    if (multa.value === "") {
+      alert("Debe ingresar un monto");
+      return;
+    }
+  }
+  if (tipo.value === "Reducción de puntos") {
+    if (puntos.value === "") {
+      alert("Debe ingresar un monto");
+      return;
+    }
+  }
+  let data = {
+    fecha: "",
+    fechaOdias: "",
+    cantidad: 0,
+    descripcion: descripcion.value,
+    multa: multa.value,
+    puntos: puntos.value,
+    tipo: tipo.value,
+    suspCancha: tipo.value === "Suspensión completa" ? true : false,
+  };
+  axios
+    .post(
+      "http://localhost:8080/api/sanciones/club?idClub=" + resultados.value.id,
+      data
+    )
+    .then((response) => {
+      console.log(response);
+      alert("Sanción guardada exitosamente");
+      limpiar();
+    })
+    .catch((error) => {
+      console.log(error);
+      alert("Error al guardar la sanción");
+      limpiar();
+    });
+};
 </script>
 <style>
 textarea {
-    resize: none;
-    height: 100px;
+  resize: none;
+  height: 100px;
 }
 </style>

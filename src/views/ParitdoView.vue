@@ -68,21 +68,16 @@
   </div>
 </template>
 <script setup>
-import { MapPin, Calendar, Users, Award } from 'lucide-vue-next';
+import { Calendar, Users } from 'lucide-vue-next';
 import axios from 'axios';
 import { onMounted } from 'vue';
 import { ref } from 'vue';
-import { MapPinHouse, LockKeyholeOpenIcon } from 'lucide-vue-next';
+import { LockKeyholeOpenIcon } from 'lucide-vue-next';
 import { useRoute } from 'vue-router'
 import { IconBallFootball } from '@tabler/icons-vue';
-import { LockKeyhole } from 'lucide-vue-next';
 import { Lock } from 'lucide-vue-next';
-import { IconUser } from '@tabler/icons-vue';
-import { IconCheck } from '@tabler/icons-vue';
-import { IconFlag } from '@tabler/icons-vue';
-import { IconFlagFilled } from '@tabler/icons-vue';
-import { IconUserFilled } from '@tabler/icons-vue';
-import DesignarArbitros from '../components/DesignarArbitros.vue';
+import DesignarArbitros from '../components/ui/DesignarArbitros.vue';
+
 const route = useRoute()
 const partido = ref({})
 const torneo = ref({})

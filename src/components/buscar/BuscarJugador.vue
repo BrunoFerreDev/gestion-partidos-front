@@ -1,6 +1,5 @@
 <template>
-    <h1 v-if="jugador">BuscarJugador</h1>
-    <FichaJugador v-else :person="jugador" />
+    <FichaJugador v-if="jugador" :person="jugador" />
 </template>
 
 <script setup>
