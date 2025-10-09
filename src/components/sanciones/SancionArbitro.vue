@@ -63,22 +63,40 @@
 
     <div>
       <label class="block font-medium">Descripción</label>
-      <textarea v-model="descripcion" class="w-full border p-2 rounded"></textarea>
+      <textarea
+        v-model="descripcion"
+        class="w-full border p-2 rounded"
+      ></textarea>
     </div>
     <div class="flex items-center justify-center w-3/5 mx-auto">
-      <button class="bg-red-600 text-white px-4 py-2 rounded" @click.prevent="guardar">
+      <button
+        class="bg-red-600 text-white px-4 py-2 rounded"
+        @click.prevent="mostrarModal = true"
+      >
         Guardar
       </button>
-      <button class="bg-orange-600 text-white px-4 py-2 rounded ml-2" @click.prevent="limpiar">
+      <button
+        class="bg-orange-600 text-white px-4 py-2 rounded ml-2"
+        @click.prevent="limpiar"
+      >
         Cancelar y Limpiar
       </button>
     </div>
+    <BaseModal
+      :show="mostrarModal"
+      message="Se registrara la sancion"
+      confirmText="Confirmar"
+      @confirm="guardar"
+      @close="mostrarModal = false"
+    />
   </form>
 </template>
 <script setup>
 import axios from "axios";
 import { ref } from "vue";
 
+import BaseModal from "../ui/BaseModal.vue";
+const mostrarModal = ref(false);
 const resultados = ref({});
 const id = ref("");
 const fechaOdias = ref("");

@@ -23,9 +23,15 @@
         Buscar
       </button>
     </div>
+    <!-- MODAL EMPTY -->
+    <BaseEmptyState
+      v-if="mostrarModal"
+      title="No se encontraron resultados"
+      message="Intente buscar por otro nombre o DNI"
+    />
 
     <!-- Resultados -->
-    <div v-if="arbitrosEncontrados.length" class="mb-6">
+    <div v-else class="mb-6" v-show="arbitrosEncontrados.length">
       <h3 class="font-semibold text-gray-700 mb-2">Resultados:</h3>
       <ul class="space-y-2">
         <li
@@ -73,8 +79,12 @@
           :key="a.id"
           class="flex justify-between items-center bg-green-50 border border-green-200 rounded-xl p-3"
         >
-          <span class="w-[150px] capitalize font-bold">{{ a.arbitro.nombre }} {{ a.arbitro.apellido }}</span>
-          <span class="w-[150px] uppercase text-sm">CI: {{ a.arbitro.dni }}</span>
+          <span class="w-[150px] capitalize font-bold"
+            >{{ a.arbitro.nombre }} {{ a.arbitro.apellido }}</span
+          >
+          <span class="w-[150px] uppercase text-sm"
+            >CI: {{ a.arbitro.dni }}</span
+          >
           <span class="w-[150px] capitalize">{{ a.rol }}</span>
           <button
             @click="quitarArbitro(a)"
@@ -92,7 +102,8 @@
 import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 import { UserCheckIcon } from "lucide-vue-next";
-
+import BaseEmptyState from "./BaseEmptyState.vue";
+const mostrarModal = ref(false);
 const props = defineProps({
   partidoId: {
     type: Number,
@@ -113,12 +124,18 @@ const buscarArbitro = async () => {
   if (!filtro.value) return;
   try {
     const res = await axios.get(
-      `http://localhost:8080/api/arbitros/buscar?dni=${filtro.value}`
+      `http://localhost:8080/api/arbitros/${filtro.value}`
     );
-    arbitrosEncontrados.value = Array.isArray(res.data) ? res.data : [res.data];
+    if (res.data) {
+      arbitrosEncontrados.value = Array.isArray(res.data) ? res.data : [res.data];
+    }else{
+      mostrarModal.value = true;
+    }
+
   } catch (error) {
     console.error(error);
     arbitrosEncontrados.value = [];
+    mostrarModal.value = true;
   }
 };
 

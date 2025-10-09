@@ -87,7 +87,7 @@
     <div class="flex items-center justify-center w-full mx-auto">
       <button
         class="bg-red-600 text-white px-4 py-2 rounded"
-        @click.prevent="guardar"
+        @click.prevent="mostrarModal = true"
       >
         Guardar
       </button>
@@ -98,12 +98,21 @@
         Cancelar y Limpiar
       </button>
     </div>
+    <BaseModal
+      :show="mostrarModal"
+      message="Se registrara la sancion"
+      confirmText="Confirmar"
+      @confirm="guardar"
+      @close="mostrarModal = false"
+    />
   </form>
 </template>
 <script setup>
 import axios from "axios";
 import { ref } from "vue";
 
+import BaseModal from "../ui/BaseModal.vue";
+const mostrarModal = ref(false);
 const id = ref("");
 const tipo = ref("Advertencia");
 const multa = ref("");
