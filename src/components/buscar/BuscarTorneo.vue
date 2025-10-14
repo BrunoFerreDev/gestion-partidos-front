@@ -463,7 +463,7 @@
       <BaseEmptyState
         v-if="mostrar"
         title="No se encontraron clubes"
-        message="Intentá cambiar los filtros o agregar un nuevo club."
+        message="Intentá cambiar los filtros o registrar un nuevo torneo."
         @close="mostrar = false"
       />
     </div>
