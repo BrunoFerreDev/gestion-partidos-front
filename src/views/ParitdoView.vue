@@ -166,6 +166,7 @@ const obtenerPartido = () => {
       route.query.visitante,
     headers: {},
   };
+  console.log(config);
   axios
     .request(config)
     .then((response) => {

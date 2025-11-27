@@ -1,112 +1,69 @@
 <template>
   <div class="bg-gray-100 p-4">
     <div class="flex flex-col max-w-7xl mx-auto">
-      <div
-        class="flex items-center justify-evenly p-8 bg-white rounded-t-lg text-lg"
-        v-if="active"
-      >
-        <label for="search" class="block font-medium text-gray-700"
-          >Buscar torneo:
-          <input
-            type="search"
-            placeholder="Buscar torneo"
-            id="search"
-            @keypress.enter="buscarTorneo"
-            class="ml-4 border-2 border-gray-500 rounded p-2"
-            v-model="search"
-        /></label>
+      <div class="flex items-center justify-evenly p-8 bg-white rounded-t-lg text-lg" v-if="active">
+        <label for="search" class="block font-medium text-gray-700">Buscar torneo:
+          <input type="search" placeholder="Buscar torneo" id="search" @keypress.enter="buscarTorneo"
+            class="ml-4 border-2 border-gray-500 rounded p-2" v-model="search" /></label>
         <div class="flex items-center justify-center gap-4">
-          <label for="radio"
-            >Buscar Nombre
-            <input
-              name="tipoBusqueda"
-              type="radio"
-              id="radio"
-              v-model="tipoBusqueda"
-              value="nombre"
-          /></label>
-          <label for="radio2"
-            >Buscar Núm
-            <input
-              name="tipoBusqueda"
-              type="radio"
-              id="radio2"
-              v-model="tipoBusqueda"
-              value="num"
-          /></label>
+          <label for="radio">Buscar Nombre
+            <input name="tipoBusqueda" type="radio" id="radio" v-model="tipoBusqueda" value="nombre" /></label>
+          <label for="radio2">Buscar Núm
+            <input name="tipoBusqueda" type="radio" id="radio2" v-model="tipoBusqueda" value="num" /></label>
         </div>
 
-        <button
-          @click.prevent="buscarTorneo"
-          class="cursor-pointer text-white font-bold px-4 py-2 rounded bg-blue-600 hover:bg-blue-800"
-        >
+        <button @click.prevent="buscarTorneo"
+          class="cursor-pointer text-white font-bold px-4 py-2 rounded bg-blue-600 hover:bg-blue-800">
           Buscar
         </button>
       </div>
       <div class="bg-gray-100 rounded-b-lg" v-else>
         <div class="bg-white shadow-lg rounded-lg">
-          <div
-            class="border-b border-gray-200 p-4 flex justify-between items-center"
-          >
+          <div class="border-b border-gray-200 p-4 flex justify-between items-center">
             <h1 class="text-2xl font-bold text-gray-800">
               {{ torneo.nombre }}
             </h1>
-            <button
-              @click="
-                () => {
-                  active = true;
-                  (torneo = {}),
-                    (search = ''),
-                    (tipoBusqueda = 'nombre'),
-                    (clubes = []),
-                    (fixture = []);
-                }
-              "
-              class="bg-gray-100 px-4 py-2 rounded ml-4 text-gray-600 hover:text-gray-800"
-            >
+            <button @click="
+              () => {
+                active = true;
+                (torneo = {}),
+                  (search = ''),
+                  (tipoBusqueda = 'nombre'),
+                  (clubes = []),
+                  (fixture = []);
+              }
+            " class="bg-gray-100 px-4 py-2 rounded ml-4 text-gray-600 hover:text-gray-800">
               Volver
             </button>
           </div>
 
           <div class="flex border-b border-gray-200">
-            <button
-              @click="activeTab = 'parent'"
-              :class="{
-                'bg-gray-100 border-t border-r border-l border-gray-300 rounded':
-                  activeTab === 'parent',
-              }"
-              class="px-6 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100 -mb-px"
-            >
+            <button @click="activeTab = 'parent'" :class="{
+              'bg-gray-100 border-t border-r border-l border-gray-300 rounded':
+                activeTab === 'parent',
+            }" class="px-6 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100 -mb-px">
               Detalles de la competición
             </button>
-            <button
-              @click="
-                () => {
-                  activeTab = 'clubs';
-                  buscarClubes();
-                }
-              "
-              :class="{
-                'bg-gray-100 border-t border-r border-l border-gray-300 rounded':
-                  activeTab === 'clubs',
-              }"
-              class="px-6 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100 -mb-px"
-            >
+            <button @click="
+              () => {
+                activeTab = 'clubs';
+                buscarClubes();
+              }
+            " :class="{
+              'bg-gray-100 border-t border-r border-l border-gray-300 rounded':
+                activeTab === 'clubs',
+            }" class="px-6 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100 -mb-px">
               Clubes
             </button>
-            <button
-              @click="
-                () => {
-                  activeTab = 'fixture';
-                  buscarFixture();
-                }
-              "
-              :class="{
-                'bg-gray-100 border-t border-r border-l border-gray-300 rounded':
-                  activeTab === 'fixture',
-              }"
-              class="px-6 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100 -mb-px"
-            >
+            <button @click="
+              () => {
+                activeTab = 'fixture';
+                buscarFixture();
+              }
+            " :class="{
+              'bg-gray-100 border-t border-r border-l border-gray-300 rounded':
+                activeTab === 'fixture',
+            }" class="px-6 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100 -mb-px">
               Fixture del torneo
             </button>
           </div>
@@ -118,63 +75,31 @@
 
                 <form class="space-y-4">
                   <div>
-                    <label
-                      for="num"
-                      class="block text-sm font-medium text-gray-700"
-                      >Núm:</label
-                    >
-                    <input
-                      type="text"
-                      id="num"
-                      v-model="torneo.codigoTorneo"
-                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                      readonly
-                    />
+                    <label for="num" class="block text-sm font-medium text-gray-700">Núm:</label>
+                    <input type="text" id="num" v-model="torneo.codigoTorneo"
+                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" readonly />
                   </div>
 
                   <div>
-                    <label
-                      for="status"
-                      class="block text-sm font-medium text-gray-700"
-                      >Estado:</label
-                    >
+                    <label for="status" class="block text-sm font-medium text-gray-700">Estado:</label>
                     <div class="flex items-center mt-1">
-                      <input
-                        type="text"
-                        id="status"
-                        v-model="torneo.estado"
-                        class="block w-full px-3 py-2 border border-gray-300 rounded-l-md shadow-sm"
-                        readonly
-                      />
-                      <button
-                        type="button"
-                        class="p-2 border border-gray-300 rounded-r-md bg-white hover:bg-gray-50"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-5 w-5 text-gray-500"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
+                      <input type="text" id="status" v-model="torneo.estado"
+                        class="block w-full px-3 py-2 border border-gray-300 rounded-l-md shadow-sm" readonly />
+                      <button type="button" class="p-2 border border-gray-300 rounded-r-md bg-white hover:bg-gray-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20"
+                          fill="currentColor">
                           <path
-                            d="M10 2a8 8 0 100 16 8 8 0 000-16zM8.5 7a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 11.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 7a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"
-                          />
+                            d="M10 2a8 8 0 100 16 8 8 0 000-16zM8.5 7a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 11.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 7a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z" />
                         </svg>
                       </button>
                     </div>
                   </div>
 
                   <div>
-                    <label
-                      for="competitionType"
-                      class="block text-sm font-medium text-gray-700"
-                      >Tipo de competición:</label
-                    >
-                    <select
-                      name="competitionType"
-                      id="competitionType"
-                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                    >
+                    <label for="competitionType" class="block text-sm font-medium text-gray-700">Tipo de
+                      competición:</label>
+                    <select name="competitionType" id="competitionType"
+                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                       <option value="" disabled selected>Seleccione</option>
                       <option value="parent">Primera Division</option>
                       <option value="club">Sub 21</option>
@@ -183,47 +108,24 @@
 
                   <div class="flex items-center space-x-2">
                     <div class="flex-1">
-                      <label
-                        for="season"
-                        class="block text-sm font-medium text-gray-700"
-                        >Temporada:</label
-                      >
-                      <span
-                        type="text"
-                        id="season"
-                        readonly
-                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                      >
+                      <label for="season" class="block text-sm font-medium text-gray-700">Temporada:</label>
+                      <span type="text" id="season" readonly
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                         {{ torneo.temporada + " - " + torneo.tipo }}
                       </span>
                     </div>
                   </div>
 
                   <div>
-                    <label
-                      for="name"
-                      class="block text-sm font-medium text-gray-700"
-                      >Nombre:</label
-                    >
-                    <input
-                      type="text"
-                      id="name"
-                      v-model="torneo.nombre"
-                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                    />
+                    <label for="name" class="block text-sm font-medium text-gray-700">Nombre:</label>
+                    <input type="text" id="name" v-model="torneo.nombre"
+                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" />
                   </div>
 
                   <div>
-                    <label
-                      for="system"
-                      class="block text-sm font-medium text-gray-700"
-                      >Sistema:</label
-                    >
-                    <select
-                      id="system"
-                      v-model="torneo.system"
-                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                    >
+                    <label for="system" class="block text-sm font-medium text-gray-700">Sistema:</label>
+                    <select id="system" v-model="torneo.system"
+                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
                       <option>Combinación</option>
                       <option>Liga</option>
                       <option>Eliminación</option>
@@ -233,124 +135,58 @@
               </div>
               <div class="w-3/6">
                 <div class="flex border-b border-gray-200 mb-4">
-                  <button
-                    class="px-4 py-2 text-sm font-semibold border-b-2 border-blue-500 text-blue-600 -mb-px"
-                  >
+                  <button class="px-4 py-2 text-sm font-semibold border-b-2 border-blue-500 text-blue-600 -mb-px">
                     Configuración general
                   </button>
                 </div>
 
                 <form class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label
-                      for="teamType"
-                      class="block text-sm font-medium text-gray-700"
-                      >Tipo de equipo:</label
-                    >
-                    <input
-                      type="text"
-                      id="teamType"
-                      v-model="configData.teamType"
-                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                    />
+                    <label for="teamType" class="block text-sm font-medium text-gray-700">Tipo de equipo:</label>
+                    <input type="text" id="teamType" v-model="configData.teamType"
+                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" />
                   </div>
 
                   <div>
-                    <label
-                      for="disciplines"
-                      class="block text-sm font-medium text-gray-700"
-                      >Disciplinas:</label
-                    >
-                    <input
-                      type="text"
-                      id="disciplines"
-                      v-model="configData.disciplines"
-                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                    />
+                    <label for="disciplines" class="block text-sm font-medium text-gray-700">Disciplinas:</label>
+                    <input type="text" id="disciplines" v-model="configData.disciplines"
+                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" />
                   </div>
 
                   <div>
-                    <label
-                      for="gender"
-                      class="block text-sm font-medium text-gray-700"
-                      >Género:</label
-                    >
-                    <input
-                      type="text"
-                      id="gender"
-                      v-model="configData.gender"
-                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                    />
+                    <label for="gender" class="block text-sm font-medium text-gray-700">Género:</label>
+                    <input type="text" id="gender" v-model="configData.gender"
+                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" />
                   </div>
 
                   <div>
-                    <label
-                      for="ageCategory"
-                      class="block text-sm font-medium text-gray-700"
-                      >Categoría de edad:</label
-                    >
-                    <input
-                      type="text"
-                      id="ageCategory"
-                      v-model="configData.ageCategory"
-                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                    />
+                    <label for="ageCategory" class="block text-sm font-medium text-gray-700">Categoría de edad:</label>
+                    <input type="text" id="ageCategory" v-model="configData.ageCategory"
+                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" />
                   </div>
 
                   <div>
-                    <label
-                      for="minAge"
-                      class="block text-sm font-medium text-gray-700"
-                      >Edad mínima:</label
-                    >
-                    <input
-                      type="number"
-                      id="minAge"
-                      v-model="configData.minAge"
-                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                    />
+                    <label for="minAge" class="block text-sm font-medium text-gray-700">Edad mínima:</label>
+                    <input type="number" id="minAge" v-model="configData.minAge"
+                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" />
                   </div>
 
                   <div>
-                    <label
-                      for="maxAge"
-                      class="block text-sm font-medium text-gray-700"
-                      >Edad máxima:</label
-                    >
-                    <input
-                      type="number"
-                      id="maxAge"
-                      v-model="configData.maxAge"
-                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                    />
+                    <label for="maxAge" class="block text-sm font-medium text-gray-700">Edad máxima:</label>
+                    <input type="number" id="maxAge" v-model="configData.maxAge"
+                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" />
                   </div>
 
                   <div>
-                    <label
-                      for="referenceDate"
-                      class="block text-sm font-medium text-gray-700"
-                      >Reference date:</label
-                    >
-                    <input
-                      type="date"
-                      id="referenceDate"
-                      v-model="configData.referenceDate"
-                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                    />
+                    <label for="referenceDate" class="block text-sm font-medium text-gray-700">Reference date:</label>
+                    <input type="date" id="referenceDate" v-model="configData.referenceDate"
+                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" />
                   </div>
 
                   <div>
-                    <label
-                      for="birthDate"
-                      class="block text-sm font-medium text-gray-700"
-                      >Fecha Nac. desde:</label
-                    >
-                    <input
-                      type="date"
-                      id="birthDate"
-                      v-model="configData.birthDate"
-                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                    />
+                    <label for="birthDate" class="block text-sm font-medium text-gray-700">Fecha Nac. desde:</label>
+                    <input type="date" id="birthDate" v-model="configData.birthDate"
+                      class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" />
                   </div>
                 </form>
               </div>
@@ -358,9 +194,7 @@
           </div>
           <div v-if="activeTab === 'clubs'">
             <div class="p-6 bg-gray-100">
-              <button
-                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded inline-flex items-center gap-2"
-              >
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded inline-flex items-center gap-2">
                 <IconPlus /> Añadir club
               </button>
               <table>
@@ -386,22 +220,20 @@
             </div>
           </div>
           <div v-if="activeTab === 'fixture'">
+            <div class="flex justify-end" v-if="Object.keys(fixture).length === 0">
+              <button @click.prevent="generarFixture"
+              class="bg-blue-600 p-2 rounded m-2 text-white hover:bg-blue-700 cursor-pointer">Generar fixture
+            </button>
+          </div>
             <!-- Recorremos las fechas -->
-            <div
-              v-for="(partidos, fecha) of fixture"
-              :key="fecha"
-              class="m-1 mt-2 p-6 bg-gray-100"
-            >
+            <div v-for="(partidos, fecha) of fixture" :key="fecha" class="m-1 mt-2 p-6 bg-gray-100">
               <!-- Título de la fecha -->
               <div class="flex items-center justify-between">
                 <h2 class="text-2xl font-bold text-blue-700">
                   Fecha {{ fecha }}
                 </h2>
-                <button
-                  @click="toggleFecha(fecha)"
-                  type="button"
-                  class="ml-auto bg-blue-500 hover:bg-blue-600 text-white rounded inline-flex items-center gap-2 px-4 py-2 cursor-pointer"
-                >
+                <button @click="toggleFecha(fecha)" type="button"
+                  class="ml-auto bg-blue-500 hover:bg-blue-600 text-white rounded inline-flex items-center gap-2 px-4 py-2 cursor-pointer">
                   <span>
                     {{ fechaAbierta === fecha ? "▲" : "▼" }}
                   </span>
@@ -421,34 +253,28 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr
-                      v-for="(partido, index) in partidos"
-                      :key="partido.idPartido"
-                      class="border-b hover:bg-gray-50"
-                    >
+                    <tr v-for="(partido, index) in partidos" :key="partido.idPartido" class="border-b hover:bg-gray-50">
                       <td class="px-4 py-2 font-medium">{{ index + 1 }}</td>
                       <td class="px-4 py-2 font-semibold">
-                        {{ partido.local }}
+                        {{ partido.local.nombre }}
                       </td>
                       <td class="px-4 py-2 font-semibold">
-                        {{ partido.visitante }}
+                        {{ partido.visitante.nombre }}
                       </td>
                       <td class="px-4 py-2 text-gray-600 uppercase">
                         {{ partido.fechaCalendario }}
                       </td>
                       <td class="px-4 py-2">
-                        <button
-                          @click="
-                            redireccionarPartido(
-                              torneo.codigoTorneo,
-                              partido.fechaTorneo,
-                              partido.local,
-                              partido.visitante,
-                              partido.idPartido
-                            )
+                        <button @click="
+                          redireccionarPartido(
+                            torneo.codigoTorneo,
+                            partido.fechaTorneo,
+                            partido.local.id,
+                            partido.visitante.id,
+                            partido.idPartido
+                          )
                           "
-                          class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded inline-flex items-center gap-2"
-                        >
+                          class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded inline-flex items-center gap-2">
                           <IconPlus /> Ver partido
                         </button>
                       </td>
@@ -460,12 +286,8 @@
           </div>
         </div>
       </div>
-      <BaseEmptyState
-        v-if="mostrar"
-        title="No se encontraron clubes"
-        message="Intentá cambiar los filtros o registrar un nuevo torneo."
-        @close="mostrar = false"
-      />
+      <BaseEmptyState v-if="mostrar" title="No se encontraron clubes"
+        message="Intentá cambiar los filtros o registrar un nuevo torneo." @close="mostrar = false" />
     </div>
   </div>
 </template>
@@ -603,6 +425,21 @@ const opcionesFormato = {
   minute: "2-digit",
   second: "2-digit",
   // Opciones que aseguran que se usa la fecha local sin forzar la zona horaria
+};
+const generarFixture = async () => {
+  try {
+    const res = await axios.post(
+      "http://localhost:8080/api/torneo/" + torneo.value.id + "/generar", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+    );
+    console.log(res.data);
+    buscarFixture();
+  } catch (error) {
+    console.log(error);
+  }
 };
 </script>
 <style scoped>
